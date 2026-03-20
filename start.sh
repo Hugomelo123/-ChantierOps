@@ -1,5 +1,6 @@
 #!/bin/bash
-# ChantierOps - Script de démarrage
+# ChantierOps - Script de démarrage LOCAL UNIQUEMENT
+# Pour le déploiement, configurer les commandes directement dans la plateforme.
 
 echo "🏗️  ChantierOps - Démarrage..."
 
