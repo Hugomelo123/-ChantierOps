@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Equipe {
+  CARRELAGE
+  MACONNERIE
+  FACADE
+  ELECTRICITE
+}
+
+enum StatusChantier {
+  OK
+  ALERTE
+  PARTIEL
+}
+
+enum UrgenceMateriau {
+  NORMAL
+  URGENT
+  CRITIQUE
+}
+
+enum StatutDemande {
+  EN_ATTENTE
+  APPROUVE
+  LIVRE
+  REFUSE
+}
+
+model Chantier {
+  id          String         @id @default(cuid())
+  nom         String
+  adresse     String
+  ville       String
+  codePostal  String
+  equipe      Equipe
+  status      StatusChantier @default(OK)
+  dateDebut   DateTime
+  dateFin     DateTime?
+  actif       Boolean        @default(true)
+  notes       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  rapports    Rapport[]
+  alertes     Alerte[]
+  demandesMat DemandeMateriau[]
+}
+
+model Rapport {
+  id           String   @id @default(cuid())
+  chantier     Chantier @relation(fields: [chantierId], references: [id])
+  chantierId   String
+  equipe       Equipe
+  date         DateTime @default(now())
+  contenu      String
+  homesJour    Int      @default(0)
+  avancement   Int      @default(0) // pourcentage 0-100
+  problemes    String?
+  source       String   @default("MANUEL") // WHATSAPP ou MANUEL
+  createdAt    DateTime @default(now())
+
+  @@index([chantierId, date])
+  @@index([equipe, date])
+}
+
+model Alerte {
+  id         String   @id @default(cuid())
+  chantier   Chantier @relation(fields: [chantierId], references: [id])
+  chantierId String
+  equipe     Equipe
+  type       String   // NON_RAPPORT, MATERIAU_MANQUANT, PROBLEME_SECURITE
+  message    String
+  resolue    Boolean  @default(false)
+  resolueAt  DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([chantierId])
+  @@index([equipe, resolue])
+}
+
+model DemandeMateriau {
+  id           String          @id @default(cuid())
+  chantier     Chantier        @relation(fields: [chantierId], references: [id])
+  chantierId   String
+  equipe       Equipe
+  materiau     String
+  quantite     Float
+  unite        String
+  urgence      UrgenceMateriau @default(NORMAL)
+  statut       StatutDemande   @default(EN_ATTENTE)
+  notes        String?
+  demandeLe    DateTime        @default(now())
+  livreeLe     DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([equipe, statut])
+  @@index([chantierId])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  de          String   // numero whatsapp
+  vers        String   // numero whatsapp
+  contenu     String
+  equipe      Equipe?
+  direction   String   // ENTRANT ou SORTANT
+  traite      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([equipe, direction])
+}
+
+model ConfigEquipe {
+  id              String @id @default(cuid())
+  equipe          Equipe @unique
+  numeroWhatsApp  String
+  chefNom         String
+  heureRapport    String @default("17:00")
+  actif           Boolean @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

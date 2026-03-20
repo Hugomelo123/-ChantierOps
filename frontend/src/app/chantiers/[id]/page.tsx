@@ -1,0 +1,332 @@
+'use client';
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { chantiersApi, rapportsApi, whatsappApi } from '@/lib/api';
+import Badge from '@/components/ui/Badge';
+import { useParams, useRouter } from 'next/navigation';
+import {
+  ArrowLeft,
+  MapPin,
+  Building2,
+  Calendar,
+  AlertTriangle,
+  FileText,
+  Package,
+  MessageSquare,
+  CheckCircle,
+  Send,
+} from 'lucide-react';
+import { useState } from 'react';
+
+const EQUIPE_LABELS: Record<string, string> = {
+  CARRELAGE: 'Carrelage',
+  MACONNERIE: 'Maçonnerie',
+  FACADE: 'Façade',
+  ELECTRICITE: 'Électricité',
+};
+
+export default function ChantierDetail() {
+  const { id } = useParams();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [instruction, setInstruction] = useState('');
+  const [showRapportForm, setShowRapportForm] = useState(false);
+  const [rapportForm, setRapportForm] = useState({
+    contenu: '',
+    homesJour: 0,
+    avancement: 0,
+    problemes: '',
+  });
+
+  const { data: chantier, isLoading } = useQuery({
+    queryKey: ['chantier', id],
+    queryFn: () => chantiersApi.getOne(id as string),
+  });
+
+  const statusMutation = useMutation({
+    mutationFn: (status: string) => chantiersApi.updateStatus(id as string, status),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['chantier', id] }),
+  });
+
+  const rapportMutation = useMutation({
+    mutationFn: (data: any) => rapportsApi.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chantier', id] });
+      setShowRapportForm(false);
+      setRapportForm({ contenu: '', homesJour: 0, avancement: 0, problemes: '' });
+    },
+  });
+
+  const instructionMutation = useMutation({
+    mutationFn: ({ equipe, message }: { equipe: string; message: string }) =>
+      whatsappApi.envoyerInstruction(equipe, message),
+    onSuccess: () => setInstruction(''),
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary-700 border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!chantier) return null;
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Back + Header */}
+      <div>
+        <button
+          onClick={() => router.push('/chantiers')}
+          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-4"
+        >
+          <ArrowLeft className="w-4 h-4" /> Retour aux chantiers
+        </button>
+
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">{chantier.nom}</h1>
+            <div className="flex items-center gap-2 mt-1">
+              <MapPin className="w-4 h-4 text-gray-400" />
+              <p className="text-sm text-gray-500">{chantier.adresse}, {chantier.codePostal} {chantier.ville}</p>
+            </div>
+            <div className="flex gap-2 mt-2">
+              <Badge variant="default">{EQUIPE_LABELS[chantier.equipe]}</Badge>
+              <Badge variant={chantier.status.toLowerCase() as any}>{chantier.status}</Badge>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            {(['OK', 'PARTIEL', 'ALERTE'] as const).map(s => (
+              <button
+                key={s}
+                onClick={() => statusMutation.mutate(s)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                  chantier.status === s
+                    ? s === 'OK' ? 'bg-green-500 text-white border-green-500'
+                    : s === 'ALERTE' ? 'bg-red-500 text-white border-red-500'
+                    : 'bg-yellow-500 text-white border-yellow-500'
+                    : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main content */}
+        <div className="lg:col-span-2 space-y-5">
+          {/* Rapports */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-gray-800 flex items-center gap-2">
+                <FileText className="w-4 h-4" /> Rapports récents
+              </h2>
+              <button
+                onClick={() => setShowRapportForm(!showRapportForm)}
+                className="text-xs px-3 py-1.5 bg-primary-700 text-white rounded-lg hover:bg-primary-800"
+              >
+                + Ajouter rapport
+              </button>
+            </div>
+
+            {showRapportForm && (
+              <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
+                <textarea
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                  rows={3}
+                  placeholder="Description des travaux effectués..."
+                  value={rapportForm.contenu}
+                  onChange={e => setRapportForm(f => ({ ...f, contenu: e.target.value }))}
+                />
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-xs text-gray-500">Avancement (%)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm mt-1"
+                      value={rapportForm.avancement}
+                      onChange={e => setRapportForm(f => ({ ...f, avancement: +e.target.value }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500">Hommes·jour</label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm mt-1"
+                      value={rapportForm.homesJour}
+                      onChange={e => setRapportForm(f => ({ ...f, homesJour: +e.target.value }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500">Problèmes</label>
+                    <input
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm mt-1"
+                      value={rapportForm.problemes}
+                      onChange={e => setRapportForm(f => ({ ...f, problemes: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowRapportForm(false)}
+                    className="px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-600"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={() => rapportMutation.mutate({
+                      ...rapportForm,
+                      chantierId: chantier.id,
+                      equipe: chantier.equipe,
+                    })}
+                    disabled={!rapportForm.contenu || rapportMutation.isPending}
+                    className="px-3 py-1.5 bg-primary-700 text-white rounded-lg text-xs hover:bg-primary-800 disabled:opacity-50"
+                  >
+                    Enregistrer
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {chantier.rapports && chantier.rapports.length > 0 ? (
+              <div className="space-y-3">
+                {chantier.rapports.map(r => (
+                  <div key={r.id} className="border border-gray-100 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs text-gray-500">
+                        {new Date(r.date).toLocaleDateString('fr-FR', {
+                          weekday: 'long', day: 'numeric', month: 'long',
+                        })}
+                      </span>
+                      <div className="flex gap-2">
+                        <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
+                          {r.avancement}% avancement
+                        </span>
+                        <span className="text-xs bg-gray-50 text-gray-600 px-2 py-0.5 rounded">
+                          {r.homesJour} H/J
+                        </span>
+                        {r.source === 'WHATSAPP' && (
+                          <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded">
+                            WhatsApp
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-700">{r.contenu}</p>
+                    {r.problemes && (
+                      <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3" /> {r.problemes}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-400 text-sm">Aucun rapport</div>
+            )}
+          </div>
+
+          {/* Alertes */}
+          {chantier.alertes && chantier.alertes.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+              <h2 className="font-semibold text-gray-800 flex items-center gap-2 mb-4">
+                <AlertTriangle className="w-4 h-4 text-red-500" /> Alertes
+              </h2>
+              <div className="space-y-2">
+                {chantier.alertes.map(a => (
+                  <div
+                    key={a.id}
+                    className={`flex items-start gap-3 p-3 rounded-lg border ${
+                      a.resolue ? 'bg-gray-50 border-gray-100' : 'bg-red-50 border-red-100'
+                    }`}
+                  >
+                    {a.resolue
+                      ? <CheckCircle className="w-4 h-4 text-green-500 mt-0.5" />
+                      : <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5" />
+                    }
+                    <div>
+                      <p className="text-sm text-gray-800">{a.message}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {new Date(a.createdAt).toLocaleDateString('fr-FR')}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-5">
+          {/* Info */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <h2 className="font-semibold text-gray-800 mb-3">Informations</h2>
+            <dl className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <dt className="text-gray-500">Équipe</dt>
+                <dd className="font-medium">{EQUIPE_LABELS[chantier.equipe]}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-gray-500">Début</dt>
+                <dd className="font-medium">{new Date(chantier.dateDebut).toLocaleDateString('fr-FR')}</dd>
+              </div>
+              {chantier.dateFin && (
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">Fin prévue</dt>
+                  <dd className="font-medium">{new Date(chantier.dateFin).toLocaleDateString('fr-FR')}</dd>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <dt className="text-gray-500">Rapports</dt>
+                <dd className="font-medium">{chantier._count?.rapports || 0}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-gray-500">Demandes mat.</dt>
+                <dd className="font-medium">{chantier._count?.demandesMat || 0}</dd>
+              </div>
+            </dl>
+            {chantier.notes && (
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <p className="text-xs text-gray-500">{chantier.notes}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Instruction WhatsApp */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <h2 className="font-semibold text-gray-800 flex items-center gap-2 mb-3">
+              <MessageSquare className="w-4 h-4 text-green-500" /> Envoyer instruction
+            </h2>
+            <textarea
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
+              rows={4}
+              placeholder="Instructions pour l'équipe..."
+              value={instruction}
+              onChange={e => setInstruction(e.target.value)}
+            />
+            <button
+              onClick={() => instructionMutation.mutate({ equipe: chantier.equipe, message: instruction })}
+              disabled={!instruction || instructionMutation.isPending}
+              className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50"
+            >
+              <Send className="w-4 h-4" />
+              {instructionMutation.isPending ? 'Envoi...' : 'Envoyer via WhatsApp'}
+            </button>
+            {instructionMutation.isSuccess && (
+              <p className="text-xs text-green-600 mt-1 text-center">Message envoyé!</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
