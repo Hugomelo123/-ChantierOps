@@ -191,7 +191,15 @@ export const materiauxApi = {
     ),
   create: (data: any) => api.post<DemandeMateriau>('/materiaux', data).then(r => r.data),
   updateStatut: (id: string, statut: string) =>
-    api.put(`/materiaux/${id}/statut`, { statut }).then(r => r.data),
+    withFallback(
+      () => api.put(`/materiaux/${id}/statut`, { statut }).then(r => r.data),
+      async () => ({ id, statut })
+    ),
+  pdfUrl: (type: 'semaine' | 'mois' | 'chantier', params?: Record<string, string>) => {
+    const base = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/materiaux/pdf/${type}`;
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return base + qs;
+  },
 };
 
 export const whatsappApi = {

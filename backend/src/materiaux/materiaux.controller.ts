@@ -56,4 +56,19 @@ export class MateriauxController {
     });
     res.send(pdf);
   }
+
+  @Get('pdf/chantier')
+  @ApiOperation({ summary: 'Rapport PDF matériaux par chantier' })
+  async pdfParChantier(
+    @Res() res: Response,
+    @Query('chantierId') chantierId?: string,
+    @Query('mois') mois?: string,
+  ) {
+    const pdf = await this.materiauxService.generatePdfParChantier(chantierId, mois);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename="materiaux-par-chantier.pdf"',
+    });
+    res.send(pdf);
+  }
 }

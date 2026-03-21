@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { materiauxApi, chantiersApi } from '@/lib/api';
 import Badge from '@/components/ui/Badge';
-import { Package, Plus, Download, X, AlertTriangle } from 'lucide-react';
+import { Package, Plus, Download, X, AlertTriangle, CheckCircle, Building2 } from 'lucide-react';
 
 const EQUIPES = ['CARRELAGE', 'MACONNERIE', 'FACADE', 'ELECTRICITE'];
 const EQUIPE_LABELS: Record<string, string> = {
@@ -175,6 +175,13 @@ export default function MateriauxPage() {
   const [equipeFilter, setEquipeFilter] = useState('');
   const [statutFilter, setStatutFilter] = useState('');
   const [urgenceFilter, setUrgenceFilter] = useState('');
+  const [toast, setToast] = useState<{ id: string; materiau: string } | null>(null);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   const { data: demandes, isLoading } = useQuery({
     queryKey: ['materiaux', equipeFilter, statutFilter, urgenceFilter],
@@ -188,18 +195,38 @@ export default function MateriauxPage() {
   const statutMutation = useMutation({
     mutationFn: ({ id, statut }: { id: string; statut: string }) =>
       materiauxApi.updateStatut(id, statut),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['materiaux'] }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['materiaux'] });
+      if (variables.statut === 'APPROUVE') {
+        const d = demandes?.find(d => d.id === variables.id);
+        if (d) setToast({ id: d.id, materiau: d.materiau });
+      }
+    },
   });
 
-  const downloadPdf = (type: 'semaine' | 'mois') => {
-    const base = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/materiaux/pdf/${type}`;
-    const params = equipeFilter ? `?equipe=${equipeFilter}` : '';
-    window.open(base + params, '_blank');
+  const downloadPdf = (type: 'semaine' | 'mois' | 'chantier') => {
+    const params: Record<string, string> = {};
+    if (equipeFilter) params.equipe = equipeFilter;
+    window.open(materiauxApi.pdfUrl(type, Object.keys(params).length ? params : undefined), '_blank');
   };
 
   return (
     <div className="p-6 space-y-5">
       {showCreate && <CreateDemandeModal onClose={() => setShowCreate(false)} />}
+
+      {/* Toast WhatsApp confirmation */}
+      {toast && (
+        <div className="fixed top-4 right-4 z-50 flex items-center gap-3 bg-green-600 text-white px-4 py-3 rounded-xl shadow-lg animate-in slide-in-from-top-2">
+          <CheckCircle className="w-5 h-5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold">Demande approuvée</p>
+            <p className="text-xs text-green-100">WhatsApp envoyé à l'équipe · {toast.materiau}</p>
+          </div>
+          <button onClick={() => setToast(null)} className="ml-2 text-green-200 hover:text-white">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -219,6 +246,12 @@ export default function MateriauxPage() {
             className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
           >
             <Download className="w-4 h-4" /> PDF Mois
+          </button>
+          <button
+            onClick={() => downloadPdf('chantier')}
+            className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+          >
+            <Building2 className="w-4 h-4" /> PDF par Chantier
           </button>
           <button
             onClick={() => setShowCreate(true)}
