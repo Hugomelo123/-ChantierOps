@@ -38,16 +38,7 @@ export default function SettingsPage() {
 
   const mutation = useMutation({
     mutationFn: ({ equipe, data }: { equipe: string; data: any }) =>
-      equipesApi.getAll().then(() => {
-        return fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/equipes/${equipe}/config`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-          }
-        ).then(r => r.json());
-      }),
+      equipesApi.saveConfig(equipe, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['equipes-config'] }),
   });
 

@@ -5,6 +5,13 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding ChantierOps...');
 
+  // Skip if data already exists
+  const existingCount = await prisma.chantier.count();
+  if (existingCount > 0) {
+    console.log('Données déjà présentes, seed ignoré.');
+    return;
+  }
+
   // Config équipes
   const equipes = [
     { equipe: 'CARRELAGE', chefNom: 'Jean Müller', numeroWhatsApp: '+352691000001' },

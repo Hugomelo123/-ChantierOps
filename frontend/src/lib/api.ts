@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL + '/api',
+  baseURL: (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -130,4 +130,6 @@ export const whatsappApi = {
 export const equipesApi = {
   getAll: () => api.get('/equipes').then(r => r.data),
   getStats: (equipe: string) => api.get(`/equipes/${equipe}/stats`).then(r => r.data),
+  saveConfig: (equipe: string, data: any) =>
+    api.post(`/equipes/${equipe}/config`, data).then(r => r.data),
 };
