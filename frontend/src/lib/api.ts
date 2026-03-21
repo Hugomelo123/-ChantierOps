@@ -7,6 +7,8 @@ const api = axios.create({
 
 export default api;
 
+export const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+
 // Types
 export type Equipe = 'CARRELAGE' | 'MACONNERIE' | 'FACADE' | 'ELECTRICITE';
 export type StatusChantier = 'OK' | 'ALERTE' | 'PARTIEL';
@@ -87,13 +89,35 @@ export interface DashboardKpis {
 
 // API calls
 export const dashboardApi = {
-  getKpis: () => api.get<DashboardKpis>('/dashboard/kpis').then(r => r.data),
+  getKpis: async () => {
+    if (IS_DEMO) {
+      const { MOCK_DASHBOARD_KPIS } = await import('./mockData');
+      return MOCK_DASHBOARD_KPIS;
+    }
+    return api.get<DashboardKpis>('/dashboard/kpis').then(r => r.data);
+  },
 };
 
 export const chantiersApi = {
-  getAll: (params?: { equipe?: string; actif?: boolean }) =>
-    api.get<Chantier[]>('/chantiers', { params }).then(r => r.data),
-  getOne: (id: string) => api.get<Chantier>(`/chantiers/${id}`).then(r => r.data),
+  getAll: async (params?: { equipe?: string; actif?: boolean }) => {
+    if (IS_DEMO) {
+      const { MOCK_CHANTIERS } = await import('./mockData');
+      let result = MOCK_CHANTIERS;
+      if (params?.equipe) result = result.filter(c => c.equipe === params.equipe);
+      if (params?.actif !== undefined) result = result.filter(c => c.actif === params.actif);
+      return result;
+    }
+    return api.get<Chantier[]>('/chantiers', { params }).then(r => r.data);
+  },
+  getOne: async (id: string) => {
+    if (IS_DEMO) {
+      const { MOCK_CHANTIERS, MOCK_RAPPORTS, MOCK_ALERTES } = await import('./mockData');
+      const c = MOCK_CHANTIERS.find(c => c.id === id);
+      if (!c) throw new Error('Chantier non trouvé');
+      return { ...c, rapports: MOCK_RAPPORTS.filter(r => r.chantierId === id), alertes: MOCK_ALERTES.filter(a => a.chantierId === id) };
+    }
+    return api.get<Chantier>(`/chantiers/${id}`).then(r => r.data);
+  },
   create: (data: any) => api.post<Chantier>('/chantiers', data).then(r => r.data),
   update: (id: string, data: any) => api.put<Chantier>(`/chantiers/${id}`, data).then(r => r.data),
   updateStatus: (id: string, status: string) =>
@@ -102,21 +126,55 @@ export const chantiersApi = {
 };
 
 export const rapportsApi = {
-  getAll: (params?: any) => api.get<Rapport[]>('/rapports', { params }).then(r => r.data),
-  getToday: (equipe?: string) =>
-    api.get<Rapport[]>('/rapports/today', { params: { equipe } }).then(r => r.data),
+  getAll: async (params?: any) => {
+    if (IS_DEMO) {
+      const { MOCK_RAPPORTS } = await import('./mockData');
+      let result = MOCK_RAPPORTS;
+      if (params?.equipe) result = result.filter(r => r.equipe === params.equipe);
+      if (params?.chantierId) result = result.filter(r => r.chantierId === params.chantierId);
+      return result;
+    }
+    return api.get<Rapport[]>('/rapports', { params }).then(r => r.data);
+  },
+  getToday: async (equipe?: string) => {
+    if (IS_DEMO) {
+      const { MOCK_RAPPORTS } = await import('./mockData');
+      const todayStr = new Date().toDateString();
+      let result = MOCK_RAPPORTS.filter(r => new Date(r.date).toDateString() === todayStr);
+      if (equipe) result = result.filter(r => r.equipe === equipe);
+      return result;
+    }
+    return api.get<Rapport[]>('/rapports/today', { params: { equipe } }).then(r => r.data);
+  },
   create: (data: any) => api.post<Rapport>('/rapports', data).then(r => r.data),
 };
 
 export const alertesApi = {
-  getAll: (params?: { equipe?: string; resolue?: boolean }) =>
-    api.get<Alerte[]>('/alertes', { params }).then(r => r.data),
+  getAll: async (params?: { equipe?: string; resolue?: boolean }) => {
+    if (IS_DEMO) {
+      const { MOCK_ALERTES } = await import('./mockData');
+      let result = MOCK_ALERTES;
+      if (params?.equipe) result = result.filter(a => a.equipe === params.equipe);
+      if (params?.resolue !== undefined) result = result.filter(a => a.resolue === params.resolue);
+      return result;
+    }
+    return api.get<Alerte[]>('/alertes', { params }).then(r => r.data);
+  },
   resoudre: (id: string) => api.post(`/alertes/${id}/resoudre`).then(r => r.data),
 };
 
 export const materiauxApi = {
-  getAll: (params?: any) =>
-    api.get<DemandeMateriau[]>('/materiaux', { params }).then(r => r.data),
+  getAll: async (params?: any) => {
+    if (IS_DEMO) {
+      const { MOCK_MATERIAUX } = await import('./mockData');
+      let result = MOCK_MATERIAUX;
+      if (params?.equipe) result = result.filter(m => m.equipe === params.equipe);
+      if (params?.statut) result = result.filter(m => m.statut === params.statut);
+      if (params?.urgence) result = result.filter(m => m.urgence === params.urgence);
+      return result;
+    }
+    return api.get<DemandeMateriau[]>('/materiaux', { params }).then(r => r.data);
+  },
   create: (data: any) => api.post<DemandeMateriau>('/materiaux', data).then(r => r.data),
   updateStatut: (id: string, statut: string) =>
     api.put(`/materiaux/${id}/statut`, { statut }).then(r => r.data),
@@ -128,7 +186,17 @@ export const whatsappApi = {
 };
 
 export const equipesApi = {
-  getAll: () => api.get('/equipes').then(r => r.data),
+  getAll: async () => {
+    if (IS_DEMO) {
+      return [
+        { equipe: 'CARRELAGE', chefNom: 'Jean Müller', numeroWhatsApp: '+352691000001', heureRapport: '17:00' },
+        { equipe: 'MACONNERIE', chefNom: 'Pierre Schmit', numeroWhatsApp: '+352691000002', heureRapport: '17:30' },
+        { equipe: 'FACADE', chefNom: 'Marc Weber', numeroWhatsApp: '+352691000003', heureRapport: '17:00' },
+        { equipe: 'ELECTRICITE', chefNom: 'Paul Klein', numeroWhatsApp: '+352691000004', heureRapport: '18:00' },
+      ];
+    }
+    return api.get('/equipes').then(r => r.data);
+  },
   getStats: (equipe: string) => api.get(`/equipes/${equipe}/stats`).then(r => r.data),
   saveConfig: (equipe: string, data: any) =>
     api.post(`/equipes/${equipe}/config`, data).then(r => r.data),
