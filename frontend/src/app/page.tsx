@@ -52,21 +52,13 @@ export default function Dashboard() {
   const { data: kpis, isLoading } = useQuery({
     queryKey: ['dashboard-kpis'],
     queryFn: dashboardApi.getKpis,
-    refetchInterval: 30000,
+    refetchInterval: 60000,
   });
 
   const { data: alertes } = useQuery({
     queryKey: ['alertes-ouvertes'],
     queryFn: () => alertesApi.getAll({ resolue: false }),
   });
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent" />
-      </div>
-    );
-  }
 
   const statusData = Object.entries(kpis?.chantiersByStatus || {}).map(([k, v]) => ({
     name: k,
@@ -101,8 +93,8 @@ export default function Dashboard() {
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-500">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          Mis à jour automatiquement
+          <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400 animate-pulse' : 'bg-green-500 animate-pulse'}`} />
+          {isLoading ? 'Chargement...' : 'Mis à jour automatiquement'}
         </div>
       </div>
 
@@ -110,35 +102,35 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <KpiCard
           title="Chantiers actifs"
-          value={kpis?.kpis.chantiersActifs || 0}
+          value={isLoading ? '…' : (kpis?.kpis.chantiersActifs ?? 0)}
           icon={Building2}
           color="blue"
           subtitle="En cours"
         />
         <KpiCard
           title="Alertes ouvertes"
-          value={kpis?.kpis.alertesOuvertes || 0}
+          value={isLoading ? '…' : (kpis?.kpis.alertesOuvertes ?? 0)}
           icon={AlertTriangle}
           color="red"
           subtitle="À traiter"
         />
         <KpiCard
           title="Rapports aujourd'hui"
-          value={kpis?.kpis.rapportsAujourdhui || 0}
+          value={isLoading ? '…' : (kpis?.kpis.rapportsAujourdhui ?? 0)}
           icon={FileText}
           color="green"
           subtitle="Reçus"
         />
         <KpiCard
           title="Demandes urgentes"
-          value={kpis?.kpis.demandesUrgentes || 0}
+          value={isLoading ? '…' : (kpis?.kpis.demandesUrgentes ?? 0)}
           icon={Package}
           color="orange"
           subtitle="Matériaux"
         />
         <KpiCard
           title="Hommes·jour / mois"
-          value={kpis?.kpis.homesJourMois || 0}
+          value={isLoading ? '…' : (kpis?.kpis.homesJourMois ?? 0)}
           icon={Users}
           color="yellow"
           subtitle="Ce mois-ci"
