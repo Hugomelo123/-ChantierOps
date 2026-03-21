@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
 import { WhatsappService } from '../whatsapp/whatsapp.service';
 
@@ -19,7 +19,10 @@ export class AlertesService {
 
     return this.prisma.alerte.findMany({
       where,
-      include: { chantier: { select: { nom: true, adresse: true } } },
+      include: {
+        chantier: { select: { nom: true, adresse: true } },
+        configEquipe: { select: { nom: true, type: true } },
+      },
       orderBy: { createdAt: 'desc' },
       take: 50,
     });
@@ -28,6 +31,7 @@ export class AlertesService {
   async create(data: {
     chantierId: string;
     equipe: string;
+    configEquipeId?: string;
     type: string;
     message: string;
   }) {
@@ -41,7 +45,7 @@ export class AlertesService {
     });
   }
 
-  // Vérifie chaque jour à 17h05 (heure Luxembourg) si les équipes ont envoyé leur rapport
+  // Every weekday at 17:05 Luxembourg time — check each team on each active chantier
   @Cron('5 17 * * 1-5', { timeZone: 'Europe/Luxembourg' })
   async verifierRapportsManquants() {
     this.logger.log('Vérification des rapports manquants...');
@@ -51,52 +55,55 @@ export class AlertesService {
 
     const chantiersActifs = await this.prisma.chantier.findMany({
       where: { actif: true },
+      include: {
+        equipes: { include: { configEquipe: true } },
+      },
     });
 
     for (const chantier of chantiersActifs) {
-      const rapport = await this.prisma.rapport.findFirst({
-        where: {
-          chantierId: chantier.id,
-          date: { gte: startOfDay },
-        },
-      });
-
-      if (!rapport) {
-        // Éviter doublons: vérifier si alerte NON_RAPPORT déjà créée aujourd'hui
-        const alerteExistante = await this.prisma.alerte.findFirst({
+      for (const { configEquipe } of chantier.equipes) {
+        // Check if this specific team sent a report today
+        const rapport = await this.prisma.rapport.findFirst({
           where: {
             chantierId: chantier.id,
-            type: 'NON_RAPPORT',
-            resolue: false,
-            createdAt: { gte: startOfDay },
+            configEquipeId: configEquipe.id,
+            date: { gte: startOfDay },
           },
         });
-        if (alerteExistante) continue;
 
-        await this.create({
-          chantierId: chantier.id,
-          equipe: chantier.equipe,
-          type: 'NON_RAPPORT',
-          message: `Aucun rapport reçu aujourd'hui pour le chantier "${chantier.nom}"`,
-        });
+        if (!rapport) {
+          // Avoid duplicates
+          const alerteExistante = await this.prisma.alerte.findFirst({
+            where: {
+              chantierId: chantier.id,
+              configEquipeId: configEquipe.id,
+              type: 'NON_RAPPORT',
+              resolue: false,
+              createdAt: { gte: startOfDay },
+            },
+          });
+          if (alerteExistante) continue;
 
-        await this.prisma.chantier.update({
-          where: { id: chantier.id },
-          data: { status: 'ALERTE' },
-        });
+          await this.create({
+            chantierId: chantier.id,
+            equipe: configEquipe.type,
+            configEquipeId: configEquipe.id,
+            type: 'NON_RAPPORT',
+            message: `Aucun rapport reçu aujourd'hui de "${configEquipe.nom}" pour "${chantier.nom}"`,
+          });
 
-        const config = await this.prisma.configEquipe.findUnique({
-          where: { equipe: chantier.equipe as any },
-        });
+          await this.prisma.chantier.update({
+            where: { id: chantier.id },
+            data: { status: 'ALERTE' },
+          });
 
-        if (config) {
           await this.whatsapp.envoyerMessage(
-            config.numeroWhatsApp,
-            `⚠️ ALERTE ChantierOps\nAucun rapport reçu pour le chantier "${chantier.nom}" (${chantier.adresse}).\nMerci d'envoyer votre rapport dès que possible.`,
+            configEquipe.numeroWhatsApp,
+            `⚠️ ALERTE ChantierOps\nAucun rapport reçu pour "${chantier.nom}" (${chantier.adresse}).\nMerci d'envoyer votre rapport dès que possible.`,
           );
-        }
 
-        this.logger.warn(`Alerte créée: ${chantier.nom} - ${chantier.equipe}`);
+          this.logger.warn(`Alerte NON_RAPPORT: ${configEquipe.nom} — ${chantier.nom}`);
+        }
       }
     }
   }

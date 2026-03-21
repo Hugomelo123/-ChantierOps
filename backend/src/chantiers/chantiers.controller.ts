@@ -39,6 +39,18 @@ export class ChantiersController {
     return this.chantiersService.updateStatus(id, status);
   }
 
+  @Post(':id/equipes/:configEquipeId')
+  @ApiOperation({ summary: 'Assigner une équipe à un chantier' })
+  addEquipe(@Param('id') id: string, @Param('configEquipeId') configEquipeId: string) {
+    return this.chantiersService.addEquipe(id, configEquipeId);
+  }
+
+  @Delete(':id/equipes/:configEquipeId')
+  @ApiOperation({ summary: 'Retirer une équipe d\'un chantier' })
+  removeEquipe(@Param('id') id: string, @Param('configEquipeId') configEquipeId: string) {
+    return this.chantiersService.removeEquipe(id, configEquipeId);
+  }
+
   @Delete(':id')
   @ApiOperation({ summary: 'Désactiver un chantier' })
   remove(@Param('id') id: string) {

@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsDateString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsDateString, IsOptional, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateChantierDto {
@@ -18,10 +18,6 @@ export class CreateChantierDto {
   @IsString()
   codePostal: string;
 
-  @ApiProperty({ enum: ['CARRELAGE', 'MACONNERIE', 'FACADE', 'ELECTRICITE'] })
-  @IsEnum(['CARRELAGE', 'MACONNERIE', 'FACADE', 'ELECTRICITE'])
-  equipe: string;
-
   @ApiProperty()
   @IsDateString()
   dateDebut: string;
@@ -35,4 +31,9 @@ export class CreateChantierDto {
   @IsString()
   @IsOptional()
   notes?: string;
+
+  @ApiProperty({ required: false, type: [String], description: 'IDs des ConfigEquipe à assigner' })
+  @IsArray()
+  @IsOptional()
+  teamIds?: string[];
 }

@@ -27,7 +27,6 @@ export class WhatsappService {
   async envoyerMessage(to: string, body: string): Promise<boolean> {
     const from = this.config.get('TWILIO_WHATSAPP_FROM') || 'whatsapp:+14155238886';
 
-    // Sauvegarder message sortant
     await this.prisma.message.create({
       data: {
         de: from,
@@ -56,111 +55,113 @@ export class WhatsappService {
     }
   }
 
-  async envoyerInstructionEquipe(equipe: string, message: string): Promise<boolean> {
-    const config = await this.prisma.configEquipe.findUnique({
-      where: { equipe: equipe as any },
+  async envoyerInstructionEquipe(equipe: string, message: string): Promise<{ success: boolean }> {
+    // Send to all active teams of this type
+    const configs = await this.prisma.configEquipe.findMany({
+      where: { type: equipe as any, actif: true },
     });
 
-    if (!config) {
-      this.logger.warn(`Config équipe ${equipe} introuvable`);
-      return false;
+    if (configs.length === 0) {
+      this.logger.warn(`Aucune équipe active de type ${equipe}`);
+      return { success: false };
     }
 
     const texte = `📋 INSTRUCTIONS ChantierOps\nÉquipe ${equipe}:\n\n${message}\n\n_ChantierOps Luxembourg_`;
-    return this.envoyerMessage(config.numeroWhatsApp, texte);
+    for (const config of configs) {
+      await this.envoyerMessage(config.numeroWhatsApp, texte);
+    }
+    return { success: true };
   }
 
-  async traiterMessageEntrant(data: {
-    From: string;
-    Body: string;
-    To: string;
-  }) {
+  async traiterMessageEntrant(data: { From: string; Body: string; To: string }) {
     const { From, Body } = data;
     this.logger.log(`Message reçu de ${From}: ${Body}`);
 
-    // Identifier l'équipe par numéro
+    // Identify team by phone number
     const config = await this.prisma.configEquipe.findFirst({
       where: { numeroWhatsApp: From.replace('whatsapp:', '') },
     });
 
-    // Sauvegarder message entrant
     await this.prisma.message.create({
       data: {
         de: From,
         vers: data.To,
         contenu: Body,
-        equipe: config?.equipe,
+        equipe: config?.type,
+        configEquipeId: config?.id,
         direction: 'ENTRANT',
         traite: false,
       },
     });
 
     if (config) {
-      await this.traiterRapportWhatsApp(config.equipe, Body, From);
+      await this.traiterRapportWhatsApp(config, Body, From);
     }
 
     return { success: true };
   }
 
-  private async traiterRapportWhatsApp(equipe: string, corps: string, from: string) {
-    // Chercher chantier actif pour cette équipe
-    const chantier = await this.prisma.chantier.findFirst({
-      where: { equipe: equipe as any, actif: true },
-      orderBy: { updatedAt: 'desc' },
+  private async traiterRapportWhatsApp(config: any, corps: string, from: string) {
+    // Find the most recently updated active chantier assigned to this specific team
+    const chantierEquipe = await this.prisma.chantierEquipe.findFirst({
+      where: { configEquipeId: config.id, chantier: { actif: true } },
+      include: { chantier: true },
+      orderBy: { chantier: { updatedAt: 'desc' } },
     });
 
-    if (!chantier) {
+    if (!chantierEquipe) {
       await this.envoyerMessage(
         from,
-        `❌ Aucun chantier actif trouvé pour l'équipe ${equipe}. Contactez le bureau.`,
+        `❌ Aucun chantier actif trouvé pour l'équipe "${config.nom}". Contactez le bureau.`,
       );
       return;
     }
 
-    // Parser le rapport (format simple: avancement%, HJ, contenu)
+    const { chantier } = chantierEquipe;
+
+    // Parse the report
     const lignes = corps.split('\n').filter(l => l.trim());
     let avancement = 0;
     let homesJour = 0;
     let problemes = '';
-    let contenu = corps;
+    const contenu = corps;
 
     for (const ligne of lignes) {
-      const matchAv = ligne.match(/avancement[:\s]+(\d+)/i);
-      const matchHJ = ligne.match(/(?:hj|hommes|hommes.jour)[:\s]+(\d+)/i);
+      const matchAv   = ligne.match(/avancement[:\s]+(\d+)/i);
+      const matchHJ   = ligne.match(/(?:hj|hommes|hommes.jour)[:\s]+(\d+)/i);
       const matchProb = ligne.match(/(?:probl[eè]me|urgent|alerte)[:\s]+(.+)/i);
-
-      if (matchAv) avancement = parseInt(matchAv[1]);
-      if (matchHJ) homesJour = parseInt(matchHJ[1]);
-      if (matchProb) problemes = matchProb[1];
+      if (matchAv)   avancement = Math.min(parseInt(matchAv[1]), 100);
+      if (matchHJ)   homesJour  = parseInt(matchHJ[1]);
+      if (matchProb) problemes  = matchProb[1];
     }
 
-    const avancementCapped = Math.min(Math.max(avancement, 0), 100);
     const newStatus = problemes ? 'ALERTE' : 'OK';
 
     await this.prisma.rapport.create({
       data: {
         chantierId: chantier.id,
-        equipe: equipe as any,
+        configEquipeId: config.id,
+        equipe: config.type,
         contenu,
         homesJour,
-        avancement: avancementCapped,
+        avancement,
         problemes: problemes || undefined,
         source: 'WHATSAPP',
       },
     });
 
-    // Mettre à jour statut chantier
     await this.prisma.chantier.update({
       where: { id: chantier.id },
       data: { status: newStatus as any },
     });
 
-    // Auto-résoudre alerte NON_RAPPORT du jour
+    // Auto-resolve NON_RAPPORT alert for this team today
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     await this.prisma.alerte.updateMany({
       where: {
         chantierId: chantier.id,
+        configEquipeId: config.id,
         type: 'NON_RAPPORT',
         resolue: false,
         createdAt: { gte: startOfDay },
@@ -168,13 +169,11 @@ export class WhatsappService {
       data: { resolue: true, resolueAt: new Date() },
     });
 
-    // Confirmer réception
     await this.envoyerMessage(
       from,
-      `✅ Rapport reçu pour ${chantier.nom}\n📊 Avancement: ${avancementCapped}%\n👷 H/J: ${homesJour}\nMerci!`,
+      `✅ Rapport reçu — ${config.nom}\n🏗️ ${chantier.nom}\n📊 Avancement: ${avancement}%\n👷 H/J: ${homesJour}\nMerci!`,
     );
 
-    // Marquer messages comme traités
     await this.prisma.message.updateMany({
       where: { de: from, traite: false },
       data: { traite: true },
