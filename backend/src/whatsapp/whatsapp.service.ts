@@ -134,22 +134,44 @@ export class WhatsappService {
       if (matchProb) problemes = matchProb[1];
     }
 
+    const avancementCapped = Math.min(Math.max(avancement, 0), 100);
+    const newStatus = problemes ? 'ALERTE' : 'OK';
+
     await this.prisma.rapport.create({
       data: {
         chantierId: chantier.id,
         equipe: equipe as any,
         contenu,
         homesJour,
-        avancement,
+        avancement: avancementCapped,
         problemes: problemes || undefined,
         source: 'WHATSAPP',
       },
     });
 
+    // Mettre à jour statut chantier
+    await this.prisma.chantier.update({
+      where: { id: chantier.id },
+      data: { status: newStatus as any },
+    });
+
+    // Auto-résoudre alerte NON_RAPPORT du jour
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    await this.prisma.alerte.updateMany({
+      where: {
+        chantierId: chantier.id,
+        type: 'NON_RAPPORT',
+        resolue: false,
+        createdAt: { gte: startOfDay },
+      },
+      data: { resolue: true, resolueAt: new Date() },
+    });
+
     // Confirmer réception
     await this.envoyerMessage(
       from,
-      `✅ Rapport reçu pour ${chantier.nom}\n📊 Avancement: ${avancement}%\n👷 H/J: ${homesJour}\nMerci!`,
+      `✅ Rapport reçu pour ${chantier.nom}\n📊 Avancement: ${avancementCapped}%\n👷 H/J: ${homesJour}\nMerci!`,
     );
 
     // Marquer messages comme traités

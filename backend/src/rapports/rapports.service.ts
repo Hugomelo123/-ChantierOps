@@ -44,17 +44,25 @@ export class RapportsService {
   async create(dto: CreateRapportDto) {
     const rapport = await this.prisma.rapport.create({ data: dto as any });
 
-    // Update chantier status based on avancement
-    if (dto.avancement !== undefined) {
-      let status = 'OK';
-      if (dto.avancement < 50) status = 'PARTIEL';
-      if (dto.problemes && dto.problemes.length > 0) status = 'ALERTE';
+    // Update chantier status: problems → ALERTE, else → OK
+    const newStatus = dto.problemes && dto.problemes.trim().length > 0 ? 'ALERTE' : 'OK';
+    await this.prisma.chantier.update({
+      where: { id: dto.chantierId },
+      data: { status: newStatus as any },
+    });
 
-      await this.prisma.chantier.update({
-        where: { id: dto.chantierId },
-        data: { status: status as any },
-      });
-    }
+    // Auto-resolve any open NON_RAPPORT alert for this chantier (created today)
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    await this.prisma.alerte.updateMany({
+      where: {
+        chantierId: dto.chantierId,
+        type: 'NON_RAPPORT',
+        resolue: false,
+        createdAt: { gte: startOfDay },
+      },
+      data: { resolue: true, resolueAt: new Date() },
+    });
 
     return rapport;
   }

@@ -41,15 +41,14 @@ export class AlertesService {
     });
   }
 
-  // Vérifie chaque jour à 17h05 si les équipes ont envoyé leur rapport
-  @Cron('5 17 * * 1-5')
+  // Vérifie chaque jour à 17h05 (heure Luxembourg) si les équipes ont envoyé leur rapport
+  @Cron('5 17 * * 1-5', { timeZone: 'Europe/Luxembourg' })
   async verifierRapportsManquants() {
     this.logger.log('Vérification des rapports manquants...');
 
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const equipes = ['CARRELAGE', 'MACONNERIE', 'FACADE', 'ELECTRICITE'];
     const chantiersActifs = await this.prisma.chantier.findMany({
       where: { actif: true },
     });
@@ -63,21 +62,29 @@ export class AlertesService {
       });
 
       if (!rapport) {
-        // Créer alerte
-        const alerte = await this.create({
+        // Éviter doublons: vérifier si alerte NON_RAPPORT déjà créée aujourd'hui
+        const alerteExistante = await this.prisma.alerte.findFirst({
+          where: {
+            chantierId: chantier.id,
+            type: 'NON_RAPPORT',
+            resolue: false,
+            createdAt: { gte: startOfDay },
+          },
+        });
+        if (alerteExistante) continue;
+
+        await this.create({
           chantierId: chantier.id,
           equipe: chantier.equipe,
           type: 'NON_RAPPORT',
           message: `Aucun rapport reçu aujourd'hui pour le chantier "${chantier.nom}"`,
         });
 
-        // Mettre à jour status chantier
         await this.prisma.chantier.update({
           where: { id: chantier.id },
           data: { status: 'ALERTE' },
         });
 
-        // Envoyer alerte WhatsApp au chef
         const config = await this.prisma.configEquipe.findUnique({
           where: { equipe: chantier.equipe as any },
         });
