@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { chantiersApi, type Chantier } from '@/lib/api';
 import Badge from '@/components/ui/Badge';
@@ -156,7 +156,7 @@ function CreateChantierModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default function ChantiersPage() {
+function ChantiersContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [showCreate, setShowCreate] = useState(false);
@@ -249,6 +249,14 @@ export default function ChantiersPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ChantiersPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-full"><div className="animate-spin rounded-full h-8 w-8 border-4 border-primary-700 border-t-transparent" /></div>}>
+      <ChantiersContent />
+    </Suspense>
   );
 }
 
