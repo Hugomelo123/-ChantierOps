@@ -100,7 +100,13 @@ export default function Sidebar() {
           <Settings className="w-4 h-4" />
           Paramètres
         </button>
-        <div className="mt-2 px-4 py-2">
+        <div className="mt-2 px-4 py-2 space-y-1">
+          {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-amber-500/20 border border-amber-400/30 rounded-md">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-xs font-medium text-amber-300">Mode démonstration</span>
+            </div>
+          )}
           <div className="text-xs text-blue-400">v1.0.0 · © 2026 ChantierOps</div>
         </div>
       </div>

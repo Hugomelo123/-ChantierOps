@@ -196,7 +196,10 @@ export const materiauxApi = {
 
 export const whatsappApi = {
   envoyerInstruction: (equipe: string, message: string) =>
-    api.post('/whatsapp/instruction', { equipe, message }).then(r => r.data),
+    withFallback(
+      () => api.post('/whatsapp/instruction', { equipe, message }).then(r => r.data),
+      async () => ({ success: true, equipe, simulated: true })
+    ),
 };
 
 const MOCK_EQUIPES = [
@@ -214,5 +217,8 @@ export const equipesApi = {
     ),
   getStats: (equipe: string) => api.get(`/equipes/${equipe}/stats`).then(r => r.data),
   saveConfig: (equipe: string, data: any) =>
-    api.post(`/equipes/${equipe}/config`, data).then(r => r.data),
+    withFallback(
+      () => api.post(`/equipes/${equipe}/config`, data).then(r => r.data),
+      async () => ({ equipe, ...data })
+    ),
 };

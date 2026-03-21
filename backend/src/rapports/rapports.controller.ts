@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Res } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Response } from 'express';
 import { RapportsService } from './rapports.service';
 import { CreateRapportDto } from './dto/create-rapport.dto';
 
@@ -32,13 +33,27 @@ export class RapportsController {
 
   @Get('pdf/semaine')
   @ApiOperation({ summary: 'Rapport PDF semaine' })
-  async pdfSemaine(@Query('equipe') equipe?: string) {
-    return this.rapportsService.generatePdfSemaine(equipe);
+  async pdfSemaine(@Res() res: Response, @Query('equipe') equipe?: string) {
+    const pdf = await this.rapportsService.generatePdfSemaine(equipe);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename="rapports-semaine.pdf"',
+    });
+    res.send(pdf);
   }
 
   @Get('pdf/mois')
   @ApiOperation({ summary: 'Rapport PDF mois' })
-  async pdfMois(@Query('equipe') equipe?: string, @Query('mois') mois?: string) {
-    return this.rapportsService.generatePdfMois(equipe, mois);
+  async pdfMois(
+    @Res() res: Response,
+    @Query('equipe') equipe?: string,
+    @Query('mois') mois?: string,
+  ) {
+    const pdf = await this.rapportsService.generatePdfMois(equipe, mois);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename="rapports-mois.pdf"',
+    });
+    res.send(pdf);
   }
 }
