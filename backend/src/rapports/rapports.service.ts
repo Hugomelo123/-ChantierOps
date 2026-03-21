@@ -42,7 +42,7 @@ export class RapportsService {
   }
 
   async create(dto: CreateRapportDto) {
-    const rapport = await this.prisma.rapport.create({ data: dto });
+    const rapport = await this.prisma.rapport.create({ data: dto as any });
 
     // Update chantier status based on avancement
     if (dto.avancement !== undefined) {

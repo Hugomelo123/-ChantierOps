@@ -55,12 +55,12 @@ export class ChantiersService {
   }
 
   async create(dto: CreateChantierDto) {
-    return this.prisma.chantier.create({ data: dto });
+    return this.prisma.chantier.create({ data: dto as any });
   }
 
   async update(id: string, dto: UpdateChantierDto) {
     await this.findOne(id);
-    return this.prisma.chantier.update({ where: { id }, data: dto });
+    return this.prisma.chantier.update({ where: { id }, data: dto as any });
   }
 
   async updateStatus(id: string, status: string) {

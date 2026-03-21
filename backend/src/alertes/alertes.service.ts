@@ -31,7 +31,7 @@ export class AlertesService {
     type: string;
     message: string;
   }) {
-    return this.prisma.alerte.create({ data });
+    return this.prisma.alerte.create({ data: data as any });
   }
 
   async resoudre(id: string) {

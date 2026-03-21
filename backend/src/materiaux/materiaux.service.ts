@@ -21,7 +21,7 @@ export class MateriauxService {
   }
 
   async create(dto: CreateDemandeDto) {
-    return this.prisma.demandeMateriau.create({ data: dto });
+    return this.prisma.demandeMateriau.create({ data: dto as any });
   }
 
   async updateStatut(id: string, statut: string) {

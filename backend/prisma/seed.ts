@@ -23,7 +23,7 @@ async function main() {
     await prisma.configEquipe.upsert({
       where: { equipe: e.equipe as any },
       create: e as any,
-      update: e,
+      update: e as any,
     });
   }
 
