@@ -40,9 +40,12 @@ export default function WhatsAppPage() {
     onError: () => setLastResult({ success: false, equipe: selectedEquipe }),
   });
 
-  const configMap = Object.fromEntries(
-    (configs || []).map((c: any) => [c.equipe, c])
-  );
+  // Group configs by type — multiple teams per type possible
+  const configsByType: Record<string, any[]> = {};
+  for (const c of (configs || []) as any[]) {
+    if (!configsByType[c.type]) configsByType[c.type] = [];
+    configsByType[c.type].push(c);
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -82,13 +85,19 @@ export default function WhatsAppPage() {
               </div>
             </div>
 
-            {/* Config info */}
-            {configMap[selectedEquipe] && (
-              <div className="flex items-center gap-2 mb-4 text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
-                <Phone className="w-4 h-4" />
-                <span>Chef: {configMap[selectedEquipe].chefNom}</span>
-                <span className="text-gray-300">·</span>
-                <span>{configMap[selectedEquipe].numeroWhatsApp}</span>
+            {/* Config info — show all teams of selected type */}
+            {configsByType[selectedEquipe]?.length > 0 && (
+              <div className="mb-4 bg-gray-50 p-3 rounded-lg space-y-1.5">
+                {configsByType[selectedEquipe].map((cfg: any) => (
+                  <div key={cfg.id} className="flex items-center gap-2 text-sm text-gray-500">
+                    <Phone className="w-3.5 h-3.5" />
+                    <span className="font-medium text-gray-700">{cfg.nom}</span>
+                    <span className="text-gray-300">·</span>
+                    <span>{cfg.chefNom}</span>
+                    <span className="text-gray-300">·</span>
+                    <span>{cfg.numeroWhatsApp}</span>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -168,18 +177,24 @@ export default function WhatsAppPage() {
           {/* Configs équipes */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <h2 className="font-semibold text-gray-800 mb-3">Numéros équipes</h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {EQUIPES.map(e => {
-                const cfg = configMap[e];
+                const teams = configsByType[e] || [];
                 return (
-                  <div key={e} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">{EQUIPE_LABELS[e]}</p>
-                      {cfg && <p className="text-xs text-gray-400">{cfg.chefNom}</p>}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {cfg ? cfg.numeroWhatsApp : <span className="text-red-400">Non configuré</span>}
-                    </div>
+                  <div key={e}>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">{EQUIPE_LABELS[e]}</p>
+                    {teams.length === 0 ? (
+                      <p className="text-xs text-red-400 pl-2">Non configuré</p>
+                    ) : (
+                      <div className="space-y-1 pl-2">
+                        {teams.map((cfg: any) => (
+                          <div key={cfg.id} className="flex items-center justify-between">
+                            <p className="text-xs text-gray-700">{cfg.nom} — {cfg.chefNom}</p>
+                            <p className="text-xs text-gray-500">{cfg.numeroWhatsApp}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })}

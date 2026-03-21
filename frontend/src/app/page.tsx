@@ -208,7 +208,13 @@ export default function Dashboard() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">{c.nom}</p>
                     <p className="text-xs text-gray-500">{c.adresse}, {c.ville}</p>
-                    <Badge variant="alerte" className="mt-1">{EQUIPE_LABELS[c.equipe] || c.equipe}</Badge>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {(c as any).equipes?.map((e: any) => (
+                        <span key={e.configEquipe.type} className="text-xs bg-red-100 text-red-700 px-1.5 py-0.5 rounded">
+                          {EQUIPE_LABELS[e.configEquipe.type] || e.configEquipe.type}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}

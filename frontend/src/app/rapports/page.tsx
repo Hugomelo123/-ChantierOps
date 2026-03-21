@@ -101,7 +101,9 @@ export default function RapportsPage() {
                       <User className="w-3 h-3" /> Manuel
                     </span>
                   )}
-                  <Badge variant="default">{EQUIPE_LABELS[r.equipe]}</Badge>
+                  <Badge variant="default">
+                    {(r as any).configEquipe?.nom || EQUIPE_LABELS[r.equipe]}
+                  </Badge>
                 </div>
               </div>
 

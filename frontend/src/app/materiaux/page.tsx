@@ -53,7 +53,9 @@ function CreateDemandeModal({ onClose }: { onClose: () => void }) {
     },
   });
 
-  const filteredChantiers = chantiers?.filter(c => c.equipe === form.equipe) || [];
+  const filteredChantiers = chantiers?.filter(c =>
+    !form.equipe || c.equipes?.some(e => e.configEquipe.type === form.equipe)
+  ) || [];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">

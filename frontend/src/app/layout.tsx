@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <title>ChantierOps — Gestion des Chantiers Luxembourg</title>
         <meta name="description" content="Gestion opérationnelle des chantiers de construction" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body>
         <QueryClientProvider client={queryClient}>

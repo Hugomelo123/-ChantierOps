@@ -72,7 +72,10 @@ export class DashboardService {
     // Chantiers avec alertes actives
     const chantiersAlerte = await this.prisma.chantier.findMany({
       where: { actif: true, status: 'ALERTE' },
-      select: { id: true, nom: true, adresse: true, ville: true },
+      select: {
+        id: true, nom: true, adresse: true, ville: true,
+        equipes: { include: { configEquipe: { select: { type: true, nom: true } } } },
+      },
       take: 5,
     });
 
