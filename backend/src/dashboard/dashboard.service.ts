@@ -17,7 +17,6 @@ export class DashboardService {
       demandesUrgentes,
       totalHJMois,
       chantiersByStatus,
-      chantiersByEquipe,
       alertesByEquipe,
       rapports7j,
     ] = await Promise.all([
@@ -42,12 +41,6 @@ export class DashboardService {
         _count: true,
       }),
 
-      this.prisma.chantier.groupBy({
-        by: ['equipe'],
-        where: { actif: true },
-        _count: true,
-      }),
-
       this.prisma.alerte.groupBy({
         by: ['equipe'],
         where: { resolue: false },
@@ -61,10 +54,25 @@ export class DashboardService {
       }),
     ]);
 
+    // Chantiers par type d'équipe — aggregate via ChantierEquipe join
+    const chantierEquipeLinks = await this.prisma.chantierEquipe.findMany({
+      where: { chantier: { actif: true } },
+      include: { configEquipe: { select: { type: true } } },
+    });
+    const byEquipeMap: Record<string, Set<string>> = {};
+    for (const link of chantierEquipeLinks) {
+      const type = link.configEquipe.type;
+      if (!byEquipeMap[type]) byEquipeMap[type] = new Set();
+      byEquipeMap[type].add(link.chantierId);
+    }
+    const chantiersByEquipe = Object.fromEntries(
+      Object.entries(byEquipeMap).map(([type, ids]) => [type, ids.size]),
+    );
+
     // Chantiers avec alertes actives
     const chantiersAlerte = await this.prisma.chantier.findMany({
       where: { actif: true, status: 'ALERTE' },
-      select: { id: true, nom: true, equipe: true, adresse: true, ville: true },
+      select: { id: true, nom: true, adresse: true, ville: true },
       take: 5,
     });
 
@@ -87,9 +95,7 @@ export class DashboardService {
       chantiersByStatus: Object.fromEntries(
         chantiersByStatus.map(g => [g.status, g._count]),
       ),
-      chantiersByEquipe: Object.fromEntries(
-        chantiersByEquipe.map(g => [g.equipe, g._count]),
-      ),
+      chantiersByEquipe,
       alertesByEquipe: Object.fromEntries(
         alertesByEquipe.map(g => [g.equipe, g._count]),
       ),

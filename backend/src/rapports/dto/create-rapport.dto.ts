@@ -36,4 +36,9 @@ export class CreateRapportDto {
   @IsString()
   @IsOptional()
   source?: string;
+
+  @ApiProperty({ required: false, description: 'ID de la ConfigEquipe spécifique' })
+  @IsString()
+  @IsOptional()
+  configEquipeId?: string;
 }

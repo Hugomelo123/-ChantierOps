@@ -51,16 +51,18 @@ export class RapportsService {
       data: { status: newStatus as any },
     });
 
-    // Auto-resolve any open NON_RAPPORT alert for this chantier (created today)
+    // Auto-resolve any open NON_RAPPORT alert for this chantier/team (created today)
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
+    const alerteWhere: any = {
+      chantierId: dto.chantierId,
+      type: 'NON_RAPPORT',
+      resolue: false,
+      createdAt: { gte: startOfDay },
+    };
+    if (dto.configEquipeId) alerteWhere.configEquipeId = dto.configEquipeId;
     await this.prisma.alerte.updateMany({
-      where: {
-        chantierId: dto.chantierId,
-        type: 'NON_RAPPORT',
-        resolue: false,
-        createdAt: { gte: startOfDay },
-      },
+      where: alerteWhere,
       data: { resolue: true, resolueAt: new Date() },
     });
 

@@ -15,18 +15,34 @@ export type StatusChantier = 'OK' | 'ALERTE' | 'PARTIEL';
 export type UrgenceMateriau = 'NORMAL' | 'URGENT' | 'CRITIQUE';
 export type StatutDemande = 'EN_ATTENTE' | 'APPROUVE' | 'LIVRE' | 'REFUSE';
 
+export interface ConfigEquipe {
+  id: string;
+  type: Equipe;
+  nom: string;
+  chefNom: string;
+  numeroWhatsApp: string;
+  heureRapport: string;
+  actif: boolean;
+}
+
+export interface ChantierEquipeLink {
+  chantierId: string;
+  configEquipeId: string;
+  configEquipe: ConfigEquipe;
+}
+
 export interface Chantier {
   id: string;
   nom: string;
   adresse: string;
   ville: string;
   codePostal: string;
-  equipe: Equipe;
   status: StatusChantier;
   dateDebut: string;
   dateFin?: string;
   actif: boolean;
   notes?: string;
+  equipes?: ChantierEquipeLink[];
   rapports?: Rapport[];
   alertes?: Alerte[];
   _count?: { rapports: number; alertes: number; demandesMat: number };
@@ -36,6 +52,7 @@ export interface Rapport {
   id: string;
   chantierId: string;
   equipe: Equipe;
+  configEquipeId?: string;
   date: string;
   contenu: string;
   homesJour: number;
@@ -43,6 +60,7 @@ export interface Rapport {
   problemes?: string;
   source: string;
   chantier?: { nom: string; adresse: string; ville: string };
+  configEquipe?: { nom: string; type: Equipe };
 }
 
 export interface Alerte {
@@ -55,6 +73,7 @@ export interface Alerte {
   resolueAt?: string;
   createdAt: string;
   chantier?: { nom: string; adresse: string };
+  configEquipe?: { nom: string; type: Equipe };
 }
 
 export interface DemandeMateriau {
@@ -114,7 +133,9 @@ export const chantiersApi = {
       async () => {
         const { MOCK_CHANTIERS } = await import('./mockData');
         let result = MOCK_CHANTIERS;
-        if (params?.equipe) result = result.filter(c => c.equipe === params.equipe);
+        if (params?.equipe) result = result.filter(c =>
+          c.equipes?.some(e => e.configEquipe.type === params.equipe)
+        );
         if (params?.actif !== undefined) result = result.filter(c => c.actif === params.actif);
         return result;
       }
@@ -132,6 +153,10 @@ export const chantiersApi = {
   update: (id: string, data: any) => api.put<Chantier>(`/chantiers/${id}`, data).then(r => r.data),
   updateStatus: (id: string, status: string) =>
     api.put(`/chantiers/${id}/status`, { status }).then(r => r.data),
+  addEquipe: (id: string, configEquipeId: string) =>
+    api.post(`/chantiers/${id}/equipes/${configEquipeId}`).then(r => r.data),
+  removeEquipe: (id: string, configEquipeId: string) =>
+    api.delete(`/chantiers/${id}/equipes/${configEquipeId}`).then(r => r.data),
   delete: (id: string) => api.delete(`/chantiers/${id}`).then(r => r.data),
 };
 
@@ -210,20 +235,33 @@ export const whatsappApi = {
     ),
 };
 
-const MOCK_EQUIPES = [
-  { equipe: 'CARRELAGE', chefNom: 'Jean Müller', numeroWhatsApp: '+352691000001', heureRapport: '17:00' },
-  { equipe: 'MACONNERIE', chefNom: 'Pierre Schmit', numeroWhatsApp: '+352691000002', heureRapport: '17:30' },
-  { equipe: 'FACADE', chefNom: 'Marc Weber', numeroWhatsApp: '+352691000003', heureRapport: '17:00' },
-  { equipe: 'ELECTRICITE', chefNom: 'Paul Klein', numeroWhatsApp: '+352691000004', heureRapport: '18:00' },
-];
-
 export const equipesApi = {
   getAll: () =>
     withFallback(
-      () => api.get('/equipes').then(r => r.data),
-      async () => MOCK_EQUIPES
+      () => api.get<ConfigEquipe[]>('/equipes').then(r => r.data),
+      async () => { const { MOCK_CONFIG_EQUIPES } = await import('./mockData'); return MOCK_CONFIG_EQUIPES; }
     ),
-  getStats: (equipe: string) => api.get(`/equipes/${equipe}/stats`).then(r => r.data),
+  getStats: (equipe: string) =>
+    withFallback(
+      () => api.get(`/equipes/${equipe}/stats`).then(r => r.data),
+      async () => ({ equipe, chantiersActifs: 0 })
+    ),
+  create: (data: Partial<ConfigEquipe>) =>
+    withFallback(
+      () => api.post<ConfigEquipe>('/equipes', data).then(r => r.data),
+      async () => ({ id: 'mock-' + Date.now(), actif: true, heureRapport: '17:00', ...data } as ConfigEquipe)
+    ),
+  update: (id: string, data: Partial<ConfigEquipe>) =>
+    withFallback(
+      () => api.put<ConfigEquipe>(`/equipes/${id}`, data).then(r => r.data),
+      async () => ({ id, ...data } as ConfigEquipe)
+    ),
+  remove: (id: string) =>
+    withFallback(
+      () => api.delete(`/equipes/${id}`).then(r => r.data),
+      async () => ({ success: true })
+    ),
+  // Legacy: keep for backward compat
   saveConfig: (equipe: string, data: any) =>
     withFallback(
       () => api.post(`/equipes/${equipe}/config`, data).then(r => r.data),

@@ -3,7 +3,7 @@
  * Activées via NEXT_PUBLIC_DEMO_MODE=true
  */
 
-import type { Chantier, Rapport, Alerte, DemandeMateriau, DashboardKpis } from './api';
+import type { Chantier, Rapport, Alerte, DemandeMateriau, DashboardKpis, ConfigEquipe } from './api';
 
 const today = new Date();
 const daysAgo = (n: number, h = 16, m = 30) => {
@@ -13,60 +13,129 @@ const daysAgo = (n: number, h = 16, m = 30) => {
   return d.toISOString();
 };
 
+export const MOCK_CONFIG_EQUIPES: ConfigEquipe[] = [
+  { id: 'eq1', type: 'CARRELAGE', nom: 'Carrelage A', chefNom: 'Jean Müller', numeroWhatsApp: '+352691000001', heureRapport: '17:00', actif: true },
+  { id: 'eq2', type: 'CARRELAGE', nom: 'Carrelage B', chefNom: 'Thomas Klein', numeroWhatsApp: '+352691000002', heureRapport: '17:00', actif: true },
+  { id: 'eq3', type: 'CARRELAGE', nom: 'Carrelage C', chefNom: 'Stefan Braun', numeroWhatsApp: '+352691000003', heureRapport: '17:30', actif: true },
+  { id: 'eq4', type: 'MACONNERIE', nom: 'Maçonnerie A', chefNom: 'Pierre Schmit', numeroWhatsApp: '+352691000004', heureRapport: '17:30', actif: true },
+  { id: 'eq5', type: 'MACONNERIE', nom: 'Maçonnerie B', chefNom: 'André Wagner', numeroWhatsApp: '+352691000005', heureRapport: '17:30', actif: true },
+  { id: 'eq6', type: 'MACONNERIE', nom: 'Maçonnerie C', chefNom: 'François Becker', numeroWhatsApp: '+352691000006', heureRapport: '17:00', actif: true },
+  { id: 'eq7', type: 'FACADE', nom: 'Façade A', chefNom: 'Marc Weber', numeroWhatsApp: '+352691000007', heureRapport: '17:00', actif: true },
+  { id: 'eq8', type: 'FACADE', nom: 'Façade B', chefNom: 'Luc Hoffmann', numeroWhatsApp: '+352691000008', heureRapport: '17:00', actif: true },
+  { id: 'eq9', type: 'ELECTRICITE', nom: 'Électricité A', chefNom: 'Paul Klein', numeroWhatsApp: '+352691000009', heureRapport: '18:00', actif: true },
+  { id: 'eq10', type: 'ELECTRICITE', nom: 'Électricité B', chefNom: 'David Lux', numeroWhatsApp: '+352691000010', heureRapport: '18:00', actif: true },
+];
+
+const mkEquipeLink = (eq: ConfigEquipe) => ({
+  chantierId: '',
+  configEquipeId: eq.id,
+  configEquipe: eq,
+});
+
 export const MOCK_CHANTIERS: Chantier[] = [
-  { id: 'ch1', nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg', codePostal: 'L-1234', equipe: 'CARRELAGE', status: 'OK', dateDebut: '2026-01-15', actif: true, notes: 'Projet résidentiel haut de gamme, 24 appartements', _count: { rapports: 8, alertes: 0, demandesMat: 2 } },
-  { id: 'ch2', nom: 'Immeuble Kirchberg Tower', adresse: '45 Avenue J.F. Kennedy', ville: 'Luxembourg', codePostal: 'L-1855', equipe: 'MACONNERIE', status: 'ALERTE', dateDebut: '2026-02-01', actif: true, notes: 'Tour de bureaux 12 étages, livraison prévue juin 2026', _count: { rapports: 5, alertes: 1, demandesMat: 1 } },
-  { id: 'ch3', nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église", ville: 'Strassen', codePostal: 'L-8030', equipe: 'FACADE', status: 'OK', dateDebut: '2026-01-20', actif: true, notes: 'Villa individuelle, façade pierre naturelle', _count: { rapports: 6, alertes: 0, demandesMat: 1 } },
-  { id: 'ch4', nom: "Bureaux Cloche d'Or", adresse: '2 Rue Alphonse Weicker', ville: 'Luxembourg', codePostal: 'L-2721', equipe: 'ELECTRICITE', status: 'PARTIEL', dateDebut: '2026-02-10', actif: true, notes: 'Rénovation complète installations électriques', _count: { rapports: 4, alertes: 1, demandesMat: 2 } },
-  { id: 'ch5', nom: 'Appartements Esch-Belval', adresse: "5 Place de l'Université", ville: 'Esch-sur-Alzette', codePostal: 'L-4365', equipe: 'CARRELAGE', status: 'OK', dateDebut: '2026-03-01', actif: true, notes: '18 appartements étudiants, livraison août 2026', _count: { rapports: 3, alertes: 0, demandesMat: 1 } },
-  { id: 'ch6', nom: 'Centre Commercial Bertrange', adresse: '1 Route de Longwy', ville: 'Bertrange', codePostal: 'L-8080', equipe: 'MACONNERIE', status: 'OK', dateDebut: '2026-02-15', actif: true, notes: 'Extension galerie marchande 2 400 m²', _count: { rapports: 7, alertes: 0, demandesMat: 2 } },
-  { id: 'ch7', nom: 'Lycée de Differdange', adresse: '23 Rue Émile Mark', ville: 'Differdange', codePostal: 'L-4620', equipe: 'FACADE', status: 'ALERTE', dateDebut: '2026-01-10', actif: true, notes: 'Rénovation thermique façades, bâtiment classé', _count: { rapports: 4, alertes: 2, demandesMat: 2 } },
-  { id: 'ch8', nom: 'Hôtel Limpertsberg', adresse: 'Boulevard de la Pétrusse 14', ville: 'Luxembourg', codePostal: 'L-2320', equipe: 'CARRELAGE', status: 'OK', dateDebut: '2026-02-20', actif: true, notes: '4 étoiles, 86 chambres, ouverture septembre 2026', _count: { rapports: 5, alertes: 0, demandesMat: 1 } },
-  { id: 'ch9', nom: 'Entrepôt Logistique Windhof', adresse: '8 Rue des Trois Cantons', ville: 'Windhof', codePostal: 'L-8399', equipe: 'ELECTRICITE', status: 'OK', dateDebut: '2026-03-05', actif: true, notes: 'Installation électrique industrielle 5 000 m²', _count: { rapports: 4, alertes: 0, demandesMat: 1 } },
-  { id: 'ch10', nom: 'Résidence Seniors Hesperange', adresse: '32 Route de Thionville', ville: 'Hesperange', codePostal: 'L-5884', equipe: 'MACONNERIE', status: 'PARTIEL', dateDebut: '2026-01-25', actif: true, notes: '60 logements adaptés, normes PMR strictes', _count: { rapports: 6, alertes: 1, demandesMat: 1 } },
+  {
+    id: 'ch1', nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg', codePostal: 'L-1234',
+    status: 'OK', dateDebut: '2026-01-15', actif: true, notes: 'Projet résidentiel haut de gamme, 24 appartements',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[0]), mkEquipeLink(MOCK_CONFIG_EQUIPES[3])],
+    _count: { rapports: 8, alertes: 0, demandesMat: 2 },
+  },
+  {
+    id: 'ch2', nom: 'Immeuble Kirchberg Tower', adresse: '45 Avenue J.F. Kennedy', ville: 'Luxembourg', codePostal: 'L-1855',
+    status: 'ALERTE', dateDebut: '2026-02-01', actif: true, notes: 'Tour de bureaux 12 étages, livraison prévue juin 2026',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[4]), mkEquipeLink(MOCK_CONFIG_EQUIPES[6])],
+    _count: { rapports: 5, alertes: 1, demandesMat: 1 },
+  },
+  {
+    id: 'ch3', nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église", ville: 'Strassen', codePostal: 'L-8030',
+    status: 'OK', dateDebut: '2026-01-20', actif: true, notes: 'Villa individuelle, façade pierre naturelle',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[7]), mkEquipeLink(MOCK_CONFIG_EQUIPES[0])],
+    _count: { rapports: 6, alertes: 0, demandesMat: 1 },
+  },
+  {
+    id: 'ch4', nom: "Bureaux Cloche d'Or", adresse: '2 Rue Alphonse Weicker', ville: 'Luxembourg', codePostal: 'L-2721',
+    status: 'ALERTE', dateDebut: '2026-02-10', actif: true, notes: 'Rénovation complète installations électriques',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[8]), mkEquipeLink(MOCK_CONFIG_EQUIPES[9])],
+    _count: { rapports: 4, alertes: 1, demandesMat: 2 },
+  },
+  {
+    id: 'ch5', nom: 'Appartements Esch-Belval', adresse: "5 Place de l'Université", ville: 'Esch-sur-Alzette', codePostal: 'L-4365',
+    status: 'OK', dateDebut: '2026-03-01', actif: true, notes: '18 appartements étudiants, livraison août 2026',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[1]), mkEquipeLink(MOCK_CONFIG_EQUIPES[3])],
+    _count: { rapports: 3, alertes: 0, demandesMat: 1 },
+  },
+  {
+    id: 'ch6', nom: 'Centre Commercial Bertrange', adresse: '1 Route de Longwy', ville: 'Bertrange', codePostal: 'L-8080',
+    status: 'OK', dateDebut: '2026-02-15', actif: true, notes: 'Extension galerie marchande 2 400 m²',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[4]), mkEquipeLink(MOCK_CONFIG_EQUIPES[5])],
+    _count: { rapports: 7, alertes: 0, demandesMat: 2 },
+  },
+  {
+    id: 'ch7', nom: 'Lycée de Differdange', adresse: '23 Rue Émile Mark', ville: 'Differdange', codePostal: 'L-4620',
+    status: 'ALERTE', dateDebut: '2026-01-10', actif: true, notes: 'Rénovation thermique façades, bâtiment classé',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[6]), mkEquipeLink(MOCK_CONFIG_EQUIPES[7])],
+    _count: { rapports: 4, alertes: 2, demandesMat: 2 },
+  },
+  {
+    id: 'ch8', nom: 'Hôtel Limpertsberg', adresse: 'Boulevard de la Pétrusse 14', ville: 'Luxembourg', codePostal: 'L-2320',
+    status: 'OK', dateDebut: '2026-02-20', actif: true, notes: '4 étoiles, 86 chambres, ouverture septembre 2026',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[2]), mkEquipeLink(MOCK_CONFIG_EQUIPES[3])],
+    _count: { rapports: 5, alertes: 0, demandesMat: 1 },
+  },
+  {
+    id: 'ch9', nom: 'Entrepôt Logistique Windhof', adresse: '8 Rue des Trois Cantons', ville: 'Windhof', codePostal: 'L-8399',
+    status: 'OK', dateDebut: '2026-03-05', actif: true, notes: 'Installation électrique industrielle 5 000 m²',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[8]), mkEquipeLink(MOCK_CONFIG_EQUIPES[5])],
+    _count: { rapports: 4, alertes: 0, demandesMat: 1 },
+  },
+  {
+    id: 'ch10', nom: 'Résidence Seniors Hesperange', adresse: '32 Route de Thionville', ville: 'Hesperange', codePostal: 'L-5884',
+    status: 'ALERTE', dateDebut: '2026-01-25', actif: true, notes: '60 logements adaptés, normes PMR strictes',
+    equipes: [mkEquipeLink(MOCK_CONFIG_EQUIPES[4]), mkEquipeLink(MOCK_CONFIG_EQUIPES[3])],
+    _count: { rapports: 6, alertes: 1, demandesMat: 1 },
+  },
 ];
 
 export const MOCK_RAPPORTS: Rapport[] = [
-  { id: 'r1', chantierId: 'ch1', equipe: 'CARRELAGE', date: daysAgo(0, 16, 45), contenu: 'Pose carrelage salle de bain R2 terminée. Début cuisine demain matin.', homesJour: 3, avancement: 65, source: 'WHATSAPP', chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg' } },
-  { id: 'r2', chantierId: 'ch3', equipe: 'FACADE', date: daysAgo(0, 17, 10), contenu: 'Enduit façade nord appliqué sur 80 m². Conditions météo favorables, on continue demain.', homesJour: 4, avancement: 40, source: 'WHATSAPP', chantier: { nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église", ville: 'Strassen' } },
-  { id: 'r3', chantierId: 'ch4', equipe: 'ELECTRICITE', date: daysAgo(0, 17, 0), contenu: "Câblage tableau électrique R1 en cours. Attente livraison disjoncteurs bloque avancement.", homesJour: 2, avancement: 30, problemes: 'Livraison disjoncteurs repoussée au 25/03', source: 'MANUEL', chantier: { nom: "Bureaux Cloche d'Or", adresse: '2 Rue Alphonse Weicker', ville: 'Luxembourg' } },
-  { id: 'r4', chantierId: 'ch8', equipe: 'CARRELAGE', date: daysAgo(0, 16, 30), contenu: 'Hall principal terminé. Début corridors étage 1. Qualité excellente, client satisfait.', homesJour: 5, avancement: 22, source: 'WHATSAPP', chantier: { nom: 'Hôtel Limpertsberg', adresse: 'Boulevard de la Pétrusse 14', ville: 'Luxembourg' } },
-  { id: 'r5', chantierId: 'ch9', equipe: 'ELECTRICITE', date: daysAgo(0, 17, 30), contenu: 'Tirage câbles HTA terminé zone A. Zone B demain. RAS côté sécurité.', homesJour: 4, avancement: 35, source: 'WHATSAPP', chantier: { nom: 'Entrepôt Logistique Windhof', adresse: '8 Rue des Trois Cantons', ville: 'Windhof' } },
+  { id: 'r1', chantierId: 'ch1', equipe: 'CARRELAGE', configEquipeId: 'eq1', date: daysAgo(0, 16, 45), contenu: 'Pose carrelage salle de bain R2 terminée. Début cuisine demain matin.', homesJour: 3, avancement: 65, source: 'WHATSAPP', chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg' }, configEquipe: { nom: 'Carrelage A', type: 'CARRELAGE' } },
+  { id: 'r2', chantierId: 'ch3', equipe: 'FACADE', configEquipeId: 'eq8', date: daysAgo(0, 17, 10), contenu: 'Enduit façade nord appliqué sur 80 m². Conditions météo favorables, on continue demain.', homesJour: 4, avancement: 40, source: 'WHATSAPP', chantier: { nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église", ville: 'Strassen' }, configEquipe: { nom: 'Façade B', type: 'FACADE' } },
+  { id: 'r3', chantierId: 'ch4', equipe: 'ELECTRICITE', configEquipeId: 'eq9', date: daysAgo(0, 17, 0), contenu: "Câblage tableau électrique R1 en cours. Attente livraison disjoncteurs bloque avancement.", homesJour: 2, avancement: 30, problemes: 'Livraison disjoncteurs repoussée au 25/03', source: 'MANUEL', chantier: { nom: "Bureaux Cloche d'Or", adresse: '2 Rue Alphonse Weicker', ville: 'Luxembourg' }, configEquipe: { nom: 'Électricité A', type: 'ELECTRICITE' } },
+  { id: 'r4', chantierId: 'ch8', equipe: 'CARRELAGE', configEquipeId: 'eq3', date: daysAgo(0, 16, 30), contenu: 'Hall principal terminé. Début corridors étage 1. Qualité excellente, client satisfait.', homesJour: 5, avancement: 22, source: 'WHATSAPP', chantier: { nom: 'Hôtel Limpertsberg', adresse: 'Boulevard de la Pétrusse 14', ville: 'Luxembourg' }, configEquipe: { nom: 'Carrelage C', type: 'CARRELAGE' } },
+  { id: 'r5', chantierId: 'ch9', equipe: 'ELECTRICITE', configEquipeId: 'eq9', date: daysAgo(0, 17, 30), contenu: 'Tirage câbles HTA terminé zone A. Zone B demain. RAS côté sécurité.', homesJour: 4, avancement: 35, source: 'WHATSAPP', chantier: { nom: 'Entrepôt Logistique Windhof', adresse: '8 Rue des Trois Cantons', ville: 'Windhof' }, configEquipe: { nom: 'Électricité A', type: 'ELECTRICITE' } },
 
   // Hier
-  { id: 'r6', chantierId: 'ch1', equipe: 'CARRELAGE', date: daysAgo(1, 17, 0), contenu: 'Salle de bain R1 terminée. Début R2 en cours. 3 ouvriers sur place.', homesJour: 3, avancement: 60, source: 'WHATSAPP', chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg' } },
-  { id: 'r7', chantierId: 'ch5', equipe: 'CARRELAGE', date: daysAgo(1, 16, 50), contenu: 'Couloir niveau 0 posé. Découpe carrelage pour escaliers en cours. Pas de problèmes.', homesJour: 4, avancement: 18, source: 'WHATSAPP', chantier: { nom: 'Appartements Esch-Belval', adresse: "5 Place de l'Université", ville: 'Esch-sur-Alzette' } },
-  { id: 'r8', chantierId: 'ch6', equipe: 'MACONNERIE', date: daysAgo(1, 17, 15), contenu: 'Dalle béton zone C coulée et vibrée. Cure en cours. Reprise dans 48h.', homesJour: 6, avancement: 55, source: 'MANUEL', chantier: { nom: 'Centre Commercial Bertrange', adresse: '1 Route de Longwy', ville: 'Bertrange' } },
-  { id: 'r9', chantierId: 'ch10', equipe: 'MACONNERIE', date: daysAgo(1, 17, 0), contenu: 'Murs refend R+1 montés. Pose linteaux terminée. Bon avancement malgré chaleur.', homesJour: 5, avancement: 42, source: 'WHATSAPP', chantier: { nom: 'Résidence Seniors Hesperange', adresse: '32 Route de Thionville', ville: 'Hesperange' } },
-  { id: 'r10', chantierId: 'ch3', equipe: 'FACADE', date: daysAgo(1, 16, 30), contenu: 'Échafaudage façade est monté. Protection bâche posée. Début enduit demain.', homesJour: 3, avancement: 35, source: 'WHATSAPP', chantier: { nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église", ville: 'Strassen' } },
+  { id: 'r6', chantierId: 'ch1', equipe: 'CARRELAGE', configEquipeId: 'eq1', date: daysAgo(1, 17, 0), contenu: 'Salle de bain R1 terminée. Début R2 en cours. 3 ouvriers sur place.', homesJour: 3, avancement: 60, source: 'WHATSAPP', chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg' }, configEquipe: { nom: 'Carrelage A', type: 'CARRELAGE' } },
+  { id: 'r7', chantierId: 'ch5', equipe: 'CARRELAGE', configEquipeId: 'eq2', date: daysAgo(1, 16, 50), contenu: 'Couloir niveau 0 posé. Découpe carrelage pour escaliers en cours. Pas de problèmes.', homesJour: 4, avancement: 18, source: 'WHATSAPP', chantier: { nom: 'Appartements Esch-Belval', adresse: "5 Place de l'Université", ville: 'Esch-sur-Alzette' }, configEquipe: { nom: 'Carrelage B', type: 'CARRELAGE' } },
+  { id: 'r8', chantierId: 'ch6', equipe: 'MACONNERIE', configEquipeId: 'eq5', date: daysAgo(1, 17, 15), contenu: 'Dalle béton zone C coulée et vibrée. Cure en cours. Reprise dans 48h.', homesJour: 6, avancement: 55, source: 'MANUEL', chantier: { nom: 'Centre Commercial Bertrange', adresse: '1 Route de Longwy', ville: 'Bertrange' }, configEquipe: { nom: 'Maçonnerie B', type: 'MACONNERIE' } },
+  { id: 'r9', chantierId: 'ch10', equipe: 'MACONNERIE', configEquipeId: 'eq4', date: daysAgo(1, 17, 0), contenu: 'Murs refend R+1 montés. Pose linteaux terminée. Bon avancement malgré chaleur.', homesJour: 5, avancement: 42, source: 'WHATSAPP', chantier: { nom: 'Résidence Seniors Hesperange', adresse: '32 Route de Thionville', ville: 'Hesperange' }, configEquipe: { nom: 'Maçonnerie A', type: 'MACONNERIE' } },
+  { id: 'r10', chantierId: 'ch3', equipe: 'FACADE', configEquipeId: 'eq8', date: daysAgo(1, 16, 30), contenu: 'Échafaudage façade est monté. Protection bâche posée. Début enduit demain.', homesJour: 3, avancement: 35, source: 'WHATSAPP', chantier: { nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église", ville: 'Strassen' }, configEquipe: { nom: 'Façade B', type: 'FACADE' } },
 
   // J-2
-  { id: 'r11', chantierId: 'ch2', equipe: 'MACONNERIE', date: daysAgo(2, 17, 30), contenu: 'Coffrage colonnes R+4 en place. Ferraillage 60% fait. Coulée prévue lundi.', homesJour: 7, avancement: 48, source: 'WHATSAPP', chantier: { nom: 'Immeuble Kirchberg Tower', adresse: '45 Avenue J.F. Kennedy', ville: 'Luxembourg' } },
-  { id: 'r12', chantierId: 'ch4', equipe: 'ELECTRICITE', date: daysAgo(2, 17, 0), contenu: 'Passage gaines R0 et R1 terminé. Tirage câbles démarré section principale.', homesJour: 3, avancement: 25, source: 'WHATSAPP', chantier: { nom: "Bureaux Cloche d'Or", adresse: '2 Rue Alphonse Weicker', ville: 'Luxembourg' } },
+  { id: 'r11', chantierId: 'ch2', equipe: 'MACONNERIE', configEquipeId: 'eq5', date: daysAgo(2, 17, 30), contenu: 'Coffrage colonnes R+4 en place. Ferraillage 60% fait. Coulée prévue lundi.', homesJour: 7, avancement: 48, source: 'WHATSAPP', chantier: { nom: 'Immeuble Kirchberg Tower', adresse: '45 Avenue J.F. Kennedy', ville: 'Luxembourg' }, configEquipe: { nom: 'Maçonnerie B', type: 'MACONNERIE' } },
+  { id: 'r12', chantierId: 'ch4', equipe: 'ELECTRICITE', configEquipeId: 'eq10', date: daysAgo(2, 17, 0), contenu: 'Passage gaines R0 et R1 terminé. Tirage câbles démarré section principale.', homesJour: 3, avancement: 25, source: 'WHATSAPP', chantier: { nom: "Bureaux Cloche d'Or", adresse: '2 Rue Alphonse Weicker', ville: 'Luxembourg' }, configEquipe: { nom: 'Électricité B', type: 'ELECTRICITE' } },
 
   // J-3
-  { id: 'r13', chantierId: 'ch1', equipe: 'CARRELAGE', date: daysAgo(3, 17, 0), contenu: 'Préparation support R1. Ragréage appliqué. Séchage 24h avant pose.', homesJour: 2, avancement: 52, source: 'WHATSAPP', chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg' } },
-  { id: 'r14', chantierId: 'ch7', equipe: 'FACADE', date: daysAgo(3, 16, 0), contenu: "Inspection façade arrière. Fissures identifiées niveau R+2, rapport photos envoyé au bureau d'études.", homesJour: 2, avancement: 20, problemes: 'Fissures façade R+2 à expertiser avant continuation', source: 'MANUEL', chantier: { nom: 'Lycée de Differdange', adresse: '23 Rue Émile Mark', ville: 'Differdange' } },
+  { id: 'r13', chantierId: 'ch1', equipe: 'CARRELAGE', configEquipeId: 'eq1', date: daysAgo(3, 17, 0), contenu: 'Préparation support R1. Ragréage appliqué. Séchage 24h avant pose.', homesJour: 2, avancement: 52, source: 'WHATSAPP', chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg' }, configEquipe: { nom: 'Carrelage A', type: 'CARRELAGE' } },
+  { id: 'r14', chantierId: 'ch7', equipe: 'FACADE', configEquipeId: 'eq7', date: daysAgo(3, 16, 0), contenu: "Inspection façade arrière. Fissures identifiées niveau R+2, rapport photos envoyé au bureau d'études.", homesJour: 2, avancement: 20, problemes: 'Fissures façade R+2 à expertiser avant continuation', source: 'MANUEL', chantier: { nom: 'Lycée de Differdange', adresse: '23 Rue Émile Mark', ville: 'Differdange' }, configEquipe: { nom: 'Façade A', type: 'FACADE' } },
 
   // J-5
-  { id: 'r15', chantierId: 'ch2', equipe: 'MACONNERIE', date: daysAgo(5, 17, 15), contenu: 'Bétonnage poteaux R+3 effectué. Décoffrage dans 72h. Progression conforme au planning.', homesJour: 6, avancement: 42, source: 'WHATSAPP', chantier: { nom: 'Immeuble Kirchberg Tower', adresse: '45 Avenue J.F. Kennedy', ville: 'Luxembourg' } },
-  { id: 'r16', chantierId: 'ch3', equipe: 'FACADE', date: daysAgo(5, 16, 45), contenu: "Nettoyage façade ouest au karcher terminé. Pose primaire d'accrochage en cours.", homesJour: 3, avancement: 28, source: 'WHATSAPP', chantier: { nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église", ville: 'Strassen' } },
+  { id: 'r15', chantierId: 'ch2', equipe: 'MACONNERIE', configEquipeId: 'eq5', date: daysAgo(5, 17, 15), contenu: 'Bétonnage poteaux R+3 effectué. Décoffrage dans 72h. Progression conforme au planning.', homesJour: 6, avancement: 42, source: 'WHATSAPP', chantier: { nom: 'Immeuble Kirchberg Tower', adresse: '45 Avenue J.F. Kennedy', ville: 'Luxembourg' }, configEquipe: { nom: 'Maçonnerie B', type: 'MACONNERIE' } },
+  { id: 'r16', chantierId: 'ch3', equipe: 'FACADE', configEquipeId: 'eq8', date: daysAgo(5, 16, 45), contenu: "Nettoyage façade ouest au karcher terminé. Pose primaire d'accrochage en cours.", homesJour: 3, avancement: 28, source: 'WHATSAPP', chantier: { nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église", ville: 'Strassen' }, configEquipe: { nom: 'Façade B', type: 'FACADE' } },
 
   // J-7
-  { id: 'r17', chantierId: 'ch1', equipe: 'CARRELAGE', date: daysAgo(7, 17, 0), contenu: 'Terrasses extérieures R0 posées, 65 m². Joints à faire demain matin.', homesJour: 4, avancement: 45, source: 'WHATSAPP', chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg' } },
-  { id: 'r18', chantierId: 'ch9', equipe: 'ELECTRICITE', date: daysAgo(7, 17, 0), contenu: 'Fouilles pour câbles enterrés terminées. Pose gaine TPC démarrée.', homesJour: 4, avancement: 18, source: 'WHATSAPP', chantier: { nom: 'Entrepôt Logistique Windhof', adresse: '8 Rue des Trois Cantons', ville: 'Windhof' } },
+  { id: 'r17', chantierId: 'ch1', equipe: 'CARRELAGE', configEquipeId: 'eq1', date: daysAgo(7, 17, 0), contenu: 'Terrasses extérieures R0 posées, 65 m². Joints à faire demain matin.', homesJour: 4, avancement: 45, source: 'WHATSAPP', chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix', ville: 'Luxembourg' }, configEquipe: { nom: 'Carrelage A', type: 'CARRELAGE' } },
+  { id: 'r18', chantierId: 'ch9', equipe: 'ELECTRICITE', configEquipeId: 'eq9', date: daysAgo(7, 17, 0), contenu: 'Fouilles pour câbles enterrés terminées. Pose gaine TPC démarrée.', homesJour: 4, avancement: 18, source: 'WHATSAPP', chantier: { nom: 'Entrepôt Logistique Windhof', adresse: '8 Rue des Trois Cantons', ville: 'Windhof' }, configEquipe: { nom: 'Électricité A', type: 'ELECTRICITE' } },
 ];
 
 export const MOCK_ALERTES: Alerte[] = [
-  { id: 'a1', chantierId: 'ch2', equipe: 'MACONNERIE', type: 'NON_RAPPORT', message: "Aucun rapport reçu aujourd'hui pour Immeuble Kirchberg Tower — équipe non joignable", resolue: false, createdAt: daysAgo(0, 17, 30), chantier: { nom: 'Immeuble Kirchberg Tower', adresse: '45 Avenue J.F. Kennedy' } },
-  { id: 'a2', chantierId: 'ch4', equipe: 'ELECTRICITE', type: 'MATERIAU_MANQUANT', message: "Disjoncteurs 63A en rupture — chantier Cloche d'Or bloqué depuis 2 jours", resolue: false, createdAt: daysAgo(2, 9, 0), chantier: { nom: "Bureaux Cloche d'Or", adresse: '2 Rue Alphonse Weicker' } },
-  { id: 'a3', chantierId: 'ch7', equipe: 'FACADE', type: 'PROBLEME_SECURITE', message: 'Fissures structurelles détectées façade R+2, Lycée Differdange — expertise requise', resolue: false, createdAt: daysAgo(3, 8, 0), chantier: { nom: 'Lycée de Differdange', adresse: '23 Rue Émile Mark' } },
-  { id: 'a4', chantierId: 'ch10', equipe: 'MACONNERIE', type: 'NON_RAPPORT', message: 'Rapport manquant hier pour Résidence Seniors Hesperange', resolue: false, createdAt: daysAgo(1, 17, 45), chantier: { nom: 'Résidence Seniors Hesperange', adresse: '32 Route de Thionville' } },
+  { id: 'a1', chantierId: 'ch2', equipe: 'MACONNERIE', type: 'NON_RAPPORT', message: "Aucun rapport reçu aujourd'hui pour Immeuble Kirchberg Tower — Maçonnerie B non joignable", resolue: false, createdAt: daysAgo(0, 17, 30), chantier: { nom: 'Immeuble Kirchberg Tower', adresse: '45 Avenue J.F. Kennedy' }, configEquipe: { nom: 'Maçonnerie B', type: 'MACONNERIE' } },
+  { id: 'a2', chantierId: 'ch4', equipe: 'ELECTRICITE', type: 'MATERIAU_MANQUANT', message: "Disjoncteurs 63A en rupture — chantier Cloche d'Or bloqué depuis 2 jours", resolue: false, createdAt: daysAgo(2, 9, 0), chantier: { nom: "Bureaux Cloche d'Or", adresse: '2 Rue Alphonse Weicker' }, configEquipe: { nom: 'Électricité A', type: 'ELECTRICITE' } },
+  { id: 'a3', chantierId: 'ch7', equipe: 'FACADE', type: 'PROBLEME_SECURITE', message: 'Fissures structurelles détectées façade R+2, Lycée Differdange — expertise requise', resolue: false, createdAt: daysAgo(3, 8, 0), chantier: { nom: 'Lycée de Differdange', adresse: '23 Rue Émile Mark' }, configEquipe: { nom: 'Façade A', type: 'FACADE' } },
+  { id: 'a4', chantierId: 'ch10', equipe: 'MACONNERIE', type: 'NON_RAPPORT', message: 'Rapport manquant hier pour Résidence Seniors Hesperange — Maçonnerie A', resolue: false, createdAt: daysAgo(1, 17, 45), chantier: { nom: 'Résidence Seniors Hesperange', adresse: '32 Route de Thionville' }, configEquipe: { nom: 'Maçonnerie A', type: 'MACONNERIE' } },
 
   // Résolues
-  { id: 'a5', chantierId: 'ch1', equipe: 'CARRELAGE', type: 'MATERIAU_MANQUANT', message: 'Stock carrelage insuffisant — réappro effectuée', resolue: true, resolueAt: daysAgo(2, 9, 0), createdAt: daysAgo(4, 10, 0), chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix' } },
-  { id: 'a6', chantierId: 'ch6', equipe: 'MACONNERIE', type: 'NON_RAPPORT', message: "Rapport manquant J-4 — oubli chef d'équipe, régularisé", resolue: true, resolueAt: daysAgo(3, 8, 30), createdAt: daysAgo(5, 17, 0), chantier: { nom: 'Centre Commercial Bertrange', adresse: '1 Route de Longwy' } },
-  { id: 'a7', chantierId: 'ch3', equipe: 'FACADE', type: 'PROBLEME_SECURITE', message: 'Échafaudage non homologué — remplacé immédiatement', resolue: true, resolueAt: daysAgo(5, 14, 0), createdAt: daysAgo(7, 9, 0), chantier: { nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église" } },
+  { id: 'a5', chantierId: 'ch1', equipe: 'CARRELAGE', type: 'MATERIAU_MANQUANT', message: 'Stock carrelage insuffisant — réappro effectuée', resolue: true, resolueAt: daysAgo(2, 9, 0), createdAt: daysAgo(4, 10, 0), chantier: { nom: 'Résidence Les Cèdres', adresse: '12 Rue de la Paix' }, configEquipe: { nom: 'Carrelage A', type: 'CARRELAGE' } },
+  { id: 'a6', chantierId: 'ch6', equipe: 'MACONNERIE', type: 'NON_RAPPORT', message: "Rapport manquant J-4 — oubli chef d'équipe, régularisé", resolue: true, resolueAt: daysAgo(3, 8, 30), createdAt: daysAgo(5, 17, 0), chantier: { nom: 'Centre Commercial Bertrange', adresse: '1 Route de Longwy' }, configEquipe: { nom: 'Maçonnerie B', type: 'MACONNERIE' } },
+  { id: 'a7', chantierId: 'ch3', equipe: 'FACADE', type: 'PROBLEME_SECURITE', message: 'Échafaudage non homologué — remplacé immédiatement', resolue: true, resolueAt: daysAgo(5, 14, 0), createdAt: daysAgo(7, 9, 0), chantier: { nom: 'Villa Strassen Premium', adresse: "8 Rue de l'Église" }, configEquipe: { nom: 'Façade B', type: 'FACADE' } },
 ];
 
 export const MOCK_MATERIAUX: DemandeMateriau[] = [
@@ -103,8 +172,8 @@ export const MOCK_DASHBOARD_KPIS: DashboardKpis = {
     demandesUrgentes: 5,
     homesJourMois,
   },
-  chantiersByStatus: { OK: 6, ALERTE: 2, PARTIEL: 2 },
-  chantiersByEquipe: { CARRELAGE: 4, MACONNERIE: 3, FACADE: 2, ELECTRICITE: 2 },
+  chantiersByStatus: { OK: 6, ALERTE: 4 },
+  chantiersByEquipe: { CARRELAGE: 4, MACONNERIE: 4, FACADE: 3, ELECTRICITE: 3 },
   alertesByEquipe: { MACONNERIE: 2, ELECTRICITE: 1, FACADE: 1 },
   chantiersAlerte: MOCK_CHANTIERS.filter(c => c.status === 'ALERTE'),
   dernieresUrgences: MOCK_MATERIAUX.filter(m => m.urgence !== 'NORMAL' && m.statut === 'EN_ATTENTE').slice(0, 4),
