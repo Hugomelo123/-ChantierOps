@@ -84,7 +84,7 @@ export default function ChantierDetail() {
   const equipes = chantier.equipes || [];
 
   // Unique types for instruction selector
-  const uniqueTypes = [...new Set(equipes.map(e => e.configEquipe.type))];
+  const uniqueTypes = Array.from(new Set(equipes.map(e => e.configEquipe.type)));
 
   // Set default equipe in instruction selector once loaded
   if (!instructionEquipe && uniqueTypes.length > 0) {
