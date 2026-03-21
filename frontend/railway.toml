@@ -1,6 +1,2 @@
-[build]
-buildCommand = "npm install && npm run build"
-
 [deploy]
-startCommand = "node_modules/.bin/next start -p $PORT"
 restartPolicyType = "on_failure"
