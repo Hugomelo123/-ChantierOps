@@ -1,6 +1,6 @@
 # ChantierOps 🏗️
 
-> **Plataforma operacional de gestão de obras em tempo real — Luxemburgo**
+> **Real-time construction site operations management — Luxembourg**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-chantierops.railway.app-blue?style=for-the-badge&logo=railway)](https://chantierops-production.up.railway.app/)
 [![NestJS](https://img.shields.io/badge/Backend-NestJS-red?style=flat-square&logo=nestjs)](https://nestjs.com/)
@@ -10,29 +10,29 @@
 
 ---
 
-## O Problema que o ChantierOps Resolve
+## The Problem ChantierOps Solves
 
-Empresas de construção no Luxemburgo perdem horas por dia tentando saber **o que está a acontecer nas obras**: os chefes de equipa ligam, mandam mensagens dispersas, os relatórios chegam tarde ou não chegam. O director de obra fica cego.
+Construction companies in Luxembourg lose hours every day trying to know **what is happening on their sites**: team leaders call, send scattered messages, reports arrive late or not at all. The site manager is flying blind.
 
-**O ChantierOps resolve isso com uma plataforma simples, rápida e integrada com WhatsApp.**
+**ChantierOps fixes this with a simple, fast platform integrated directly with WhatsApp.**
 
 ---
 
-## Demo ao Vivo
+## Live Demo
 
 **[https://chantierops-production.up.railway.app/](https://chantierops-production.up.railway.app/)**
 
 ---
 
-## Funcionalidades Principais
+## Key Features
 
-### Dashboard em Tempo Real
-- KPIs instantâneos: obras ativas, alertas, homens/dia, materiais pendentes
-- Gráficos de evolução (homens·dia por semana, status por equipa)
-- Alertas e pedidos urgentes visíveis à primeira vista
+### Real-Time Dashboard
+- Live KPIs: active sites, alerts, man-days, pending materials
+- Charts: man-days per week, site status, team breakdown
+- Urgent alerts and material requests at a glance
 
-### Relatórios via WhatsApp
-Os chefes de equipa enviam o relatório do dia diretamente pelo WhatsApp — sem app, sem login, sem formação. O sistema processa automaticamente:
+### Reports via WhatsApp
+Team leaders send their daily report straight from WhatsApp — no app, no login, no training needed. The system parses it automatically:
 
 ```
 Avancement: 75%
@@ -41,27 +41,27 @@ Travaux: pose carrelage R2
 Problème: livraison en retard
 ```
 
-### Alertas Automáticos
-- Deteção automática de relatórios em falta às **17h05** (seg-sex)
-- WhatsApp automático ao chefe de equipa em falta
-- Histórico completo de alertas por obra
+### Automatic Alerts
+- Detects missing reports at **17:05** (Mon–Fri)
+- Sends automatic WhatsApp reminder to the team leader
+- Full alert history per site
 
-### Gestão de Materiais
-- Pedidos com prioridade (Normal / Urgente / Crítico)
-- Aprovação rápida pelo director de obra
-- Exportação em PDF semanal e mensal
+### Materials Management
+- Requests with priority levels (Normal / Urgent / Critical)
+- One-click approval by the site manager
+- Weekly and monthly PDF exports
 
-### Relatórios PDF
-- Relatórios semanais e mensais por obra ou por equipa
-- Prontos para enviar ao cliente ou para arquivo
+### PDF Reports
+- Weekly and monthly reports per site or per team
+- Ready to send to clients or for archiving
 
 ---
 
-## Stack Técnica
+## Tech Stack
 
 ```
-Frontend          Backend           Infra
-─────────────     ─────────────     ─────────────
+Frontend          Backend           Infrastructure
+─────────────     ─────────────     ──────────────
 Next.js 14        NestJS            Railway (deploy)
 Tailwind CSS      Prisma ORM        PostgreSQL 15
 Recharts          REST API          Docker
@@ -70,12 +70,12 @@ TypeScript        Swagger/OpenAPI   Twilio WhatsApp
 
 ---
 
-## Arquitectura
+## Architecture
 
 ```
 ┌─────────────┐     WhatsApp      ┌──────────────┐
-│  Chefe de   │ ─────────────────▶│    Twilio    │
-│   equipa    │                   │   Webhook    │
+│  Team       │ ─────────────────▶│    Twilio    │
+│  Leader     │                   │   Webhook    │
 └─────────────┘                   └──────┬───────┘
                                          │
                                   ┌──────▼───────┐
@@ -93,33 +93,33 @@ TypeScript        Swagger/OpenAPI   Twilio WhatsApp
 
 ## ChantierOps vs Odoo
 
-| Funcionalidade | Odoo | ChantierOps |
+| Feature | Odoo | ChantierOps |
 |---|:---:|:---:|
-| Faturação / Contabilidade | ✅ | — |
-| Gestão de RH e salários | ✅ | — |
-| Relatórios diários de obra | ❌ | ✅ |
-| WhatsApp integrado | ❌ | ✅ |
-| Alertas automáticos de falta de relatório | ❌ | ✅ |
-| Dashboard operacional em tempo real | ⚠️ fraco | ✅ |
-| Interface rápida no telemóvel | ⚠️ pesado | ✅ |
+| Invoicing / Accounting | ✅ | — |
+| HR & Payroll | ✅ | — |
+| Daily site reports | ❌ | ✅ |
+| WhatsApp integration | ❌ | ✅ |
+| Automatic missing-report alerts | ❌ | ✅ |
+| Real-time operational dashboard | ⚠️ weak | ✅ |
+| Fast mobile interface | ⚠️ heavy | ✅ |
 
-> **O ChantierOps não substitui o Odoo — complementa-o.** O Odoo gere o back-office, o ChantierOps gere o chão de obra.
+> **ChantierOps doesn't replace Odoo — it complements it.** Odoo handles back-office, ChantierOps handles the field.
 
 ---
 
-## Instalação Local
+## Getting Started
 
-### Pré-requisitos
+### Prerequisites
 - Node.js 20+
 - PostgreSQL 15+
-- (Opcional) Docker & Docker Compose
+- (Optional) Docker & Docker Compose
 
-### 1. Configuração
+### 1. Setup
 ```bash
 git clone https://github.com/Hugomelo123/-ChantierOps.git
 cd -ChantierOps
 cp backend/.env.example backend/.env
-# Editar backend/.env com as suas credenciais
+# Edit backend/.env with your credentials
 ```
 
 ### 2. Backend
@@ -127,32 +127,32 @@ cp backend/.env.example backend/.env
 cd backend
 npm install
 npx prisma migrate dev --name init
-npm run seed        # Dados de demonstração
-npm run start:dev   # Porta 3001
+npm run seed        # Demo data
+npm run start:dev   # Port 3001
 ```
 
 ### 3. Frontend
 ```bash
 cd frontend
 npm install
-npm run dev         # Porta 3000
+npm run dev         # Port 3000
 ```
 
-### Com Docker
+### With Docker
 ```bash
 docker-compose up --build
 ```
 
-### URLs locais
-| Serviço | URL |
+### Local URLs
+| Service | URL |
 |---------|-----|
-| Aplicação | http://localhost:3000 |
+| App | http://localhost:3000 |
 | API | http://localhost:3001/api |
 | Swagger | http://localhost:3001/api/docs |
 
 ---
 
-## Variáveis de Ambiente
+## Environment Variables
 
 ```env
 # backend/.env
@@ -166,27 +166,27 @@ JWT_SECRET=your_secret_here
 
 ---
 
-## Configuração Twilio WhatsApp
+## Twilio WhatsApp Setup
 
-1. Criar conta em [twilio.com](https://www.twilio.com)
-2. Ativar WhatsApp Sandbox na consola Twilio
-3. Configurar webhook: `https://seu-dominio.com/api/whatsapp/webhook`
-4. Copiar Account SID e Auth Token para `backend/.env`
+1. Create a [Twilio](https://www.twilio.com) account
+2. Enable the WhatsApp Sandbox in the Twilio console
+3. Set the webhook URL: `https://your-domain.com/api/whatsapp/webhook`
+4. Copy Account SID and Auth Token to `backend/.env`
 
 ---
 
 ## Roadmap
 
-- [ ] App mobile nativa (React Native)
-- [ ] Integração com Odoo via API REST
-- [ ] Reconhecimento de voz para relatórios
-- [ ] Multi-empresa / multi-tenant
-- [ ] Módulo de planning de equipas
+- [ ] Native mobile app (React Native)
+- [ ] Odoo integration via REST API
+- [ ] Voice-to-report (speech recognition)
+- [ ] Multi-company / multi-tenant support
+- [ ] Team scheduling module
 
 ---
 
-## Autor
+## Author
 
-Desenvolvido por **Hugo Melo** · [GitHub](https://github.com/Hugomelo123)
+Built by **Hugo Melo** · [GitHub](https://github.com/Hugomelo123)
 
-> Projeto desenvolvido para resolver um problema real de gestão de obras no Luxemburgo.
+> Built to solve a real operational problem for construction companies in Luxembourg.
