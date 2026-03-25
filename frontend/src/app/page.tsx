@@ -9,11 +9,11 @@ import {
   FileText,
   Package,
   ArrowRight,
-  Github,
   CheckCircle,
-  Smartphone,
-  Zap,
-  Shield,
+  Phone,
+  Clock,
+  AlertTriangle,
+  TrendingUp,
 } from 'lucide-react';
 
 const DEMO_URL = '/dashboard';
@@ -23,30 +23,27 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white text-gray-900">
 
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#1e3a5f' }}>
               <HardHat className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-gray-900">ChantierOps</span>
+            <span className="font-bold text-gray-900 text-base">ChantierOps</span>
           </div>
           <div className="flex items-center gap-3">
-            <a
-              href="https://github.com/Hugomelo123/-ChantierOps"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
-            >
-              <Github className="w-4 h-4" />
-              GitHub
+            <a href="#comment" className="hidden sm:block text-sm text-gray-500 hover:text-gray-800 transition">
+              Comment ça fonctionne
+            </a>
+            <a href="#fonctionnalites" className="hidden sm:block text-sm text-gray-500 hover:text-gray-800 transition">
+              Fonctionnalités
             </a>
             <Link
               href={DEMO_URL}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors hover:opacity-90"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white transition hover:opacity-90"
               style={{ backgroundColor: '#1e3a5f' }}
             >
-              Voir la demo
+              Essayer la démo
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -54,95 +51,150 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="pt-28 pb-20 px-4 sm:px-6 text-center">
-        <div className="max-w-3xl mx-auto">
+      <section className="pt-28 pb-20 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6 border"
-            style={{ backgroundColor: '#f0f4f8', borderColor: '#c7d8e8', color: '#1e3a5f' }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-6 border"
+            style={{ backgroundColor: '#f0f6ff', borderColor: '#b8d0ee', color: '#1e3a5f' }}
           >
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-            Demo live disponible
+            Spécialisé construction Luxembourg
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-            Gerez vos chantiers
-            <br />
-            <span style={{ color: '#1e3a5f' }}>depuis WhatsApp</span>
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-6">
+            Savoir ce qui se passe<br />
+            <span style={{ color: '#1e3a5f' }}>sur vos chantiers,</span><br />
+            sans passer vos journées au téléphone.
           </h1>
 
-          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-            ChantierOps connecte les chefs d&apos;equipe sur le terrain avec le directeur de travaux.
-            Les rapports arrivent via WhatsApp, les alertes partent automatiquement.
-            Sans application a installer, sans formation.
+          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mb-10 leading-relaxed">
+            Vos chefs d&apos;équipe envoient leur rapport quotidien via WhatsApp.
+            Vous voyez tout en temps réel sur votre tableau de bord.
+            Aucune application à installer, aucune formation nécessaire.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href={DEMO_URL}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold text-white shadow-lg hover:opacity-90 transition"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-bold text-white shadow-lg hover:opacity-90 transition"
               style={{ backgroundColor: '#1e3a5f' }}
             >
-              Acceder a la demo
+              Voir le tableau de bord en démo
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
-              href="https://github.com/Hugomelo123/-ChantierOps"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#comment"
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold text-gray-700 border border-gray-200 hover:bg-gray-50 transition"
             >
-              <Github className="w-4 h-4" />
-              Voir le code
+              Comment ça fonctionne
             </a>
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-16 px-4 sm:px-6 bg-gray-50">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900">
-            Comment ca fonctionne
+      {/* Pain points */}
+      <section className="py-14 px-4 sm:px-6" style={{ backgroundColor: '#f8fafc' }}>
+        <div className="max-w-4xl mx-auto">
+          <p className="text-sm font-semibold uppercase tracking-widest text-center mb-10" style={{ color: '#1e3a5f' }}>
+            Vous reconnaissez-vous dans ces situations ?
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Phone,
+                title: 'Fini les 8 appels par jour',
+                desc: 'Vous passez votre journée à appeler les chefs d\'équipe pour savoir où en sont les travaux. Les réponses sont toujours "ça avance" sans détails.',
+              },
+              {
+                icon: Clock,
+                title: 'Des rapports qui arrivent trop tard',
+                desc: 'Les comptes-rendus arrivent le lendemain, parfois jamais. Vous pilotez à l\'aveugle et vous le savez.',
+              },
+              {
+                icon: AlertTriangle,
+                title: 'Des problèmes détectés trop tard',
+                desc: 'Un retard de livraison, un problème de sécurité, une équipe en sous-effectif : vous l\'apprenez quand il est trop tard pour réagir.',
+              },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-white rounded-2xl border border-red-100 p-5">
+                <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center mb-4">
+                  <Icon className="w-5 h-5 text-red-500" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Solution intro */}
+      <section className="py-16 px-4 sm:px-6 text-center" id="comment">
+        <div className="max-w-2xl mx-auto">
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-6 flex items-center justify-center" style={{ backgroundColor: '#e8f0f8' }}>
+            <HardHat className="w-7 h-7" style={{ color: '#1e3a5f' }} />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            La visibilité en temps réel, sans changer les habitudes de vos équipes
           </h2>
+          <p className="text-gray-500 leading-relaxed">
+            Vos chefs d&apos;équipe utilisent déjà WhatsApp. ChantierOps se connecte à WhatsApp Business
+            pour recevoir leurs rapports, les analyser automatiquement, et mettre à jour votre tableau
+            de bord instantanément. Vous restez informé, eux ne changent rien.
+          </p>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="py-12 px-4 sm:px-6 bg-gray-50">
+        <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 step: '1',
-                icon: MessageSquare,
                 color: '#25D366',
-                title: "Chef d'equipe envoie sur WhatsApp",
-                desc: "En fin de journee, il envoie son rapport directement depuis WhatsApp. Avancement, hommes jour, problemes en quelques lignes.",
+                icon: MessageSquare,
+                title: "Le chef d'équipe envoie son rapport sur WhatsApp",
+                desc: "En fin de journée, il envoie quelques lignes : avancement, nombre d'hommes, travaux du jour, problèmes. Rien de plus.",
+                example: 'Avancement: 75%\nHJ: 4\nTravaux: pose carrelage R2\nProbleme: livraison en retard',
               },
               {
                 step: '2',
-                icon: Zap,
                 color: '#1e3a5f',
-                title: 'Le systeme traite automatiquement',
-                desc: "ChantierOps analyse le message, met a jour les KPIs du chantier et stocke le rapport. Zero saisie manuelle.",
+                icon: BarChart2,
+                title: 'ChantierOps met à jour le tableau de bord automatiquement',
+                desc: 'Le système analyse le message, met à jour les indicateurs du chantier et enregistre le rapport. Instantanément.',
+                example: null,
               },
               {
                 step: '3',
-                icon: BarChart2,
                 color: '#f39c12',
-                title: 'Le directeur voit tout en temps reel',
-                desc: "Dashboard mis a jour instantanement. Si un rapport manque a 17h05, une alerte WhatsApp part automatiquement.",
+                icon: Bell,
+                title: 'Vous êtes alerté si quelque chose ne va pas',
+                desc: 'Rapport manquant à 17h05 ? Problème signalé ? Vous recevez une alerte immédiatement. Vous pouvez réagir avant que ça empire.',
+                example: null,
               },
-            ].map(({ step, icon: Icon, color, title, desc }) => (
-              <div key={step}>
-                <div className="flex flex-col items-start gap-4">
+            ].map(({ step, color, icon: Icon, title, desc, example }) => (
+              <div key={step} className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                    className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: color + '20' }}
                   >
-                    <Icon className="w-6 h-6" style={{ color }} />
+                    <Icon className="w-5 h-5" style={{ color }} />
                   </div>
-                  <div>
-                    <div className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color }}>
-                      Etape {step}
+                  <div className="text-xs font-bold uppercase tracking-widest" style={{ color }}>
+                    Étape {step}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-sm leading-snug">{title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                  {example && (
+                    <div className="mt-3 bg-green-50 border border-green-100 rounded-xl p-3">
+                      <p className="text-xs text-gray-700 font-mono whitespace-pre-line">{example}</p>
                     </div>
-                    <h3 className="text-base font-semibold text-gray-900 mb-2">{title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
-                  </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -151,61 +203,61 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="py-16 px-4 sm:px-6">
+      <section className="py-16 px-4 sm:px-6" id="fonctionnalites">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 text-gray-900">
-            Tout ce dont vous avez besoin
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-3 text-gray-900">
+            Tout ce dont vous avez besoin pour piloter vos chantiers
           </h2>
-          <p className="text-center text-gray-500 mb-12 max-w-xl mx-auto">
-            Une seule plateforme pour suivre l&apos;avancement, gerer les materiaux et piloter vos equipes.
+          <p className="text-center text-gray-500 mb-12 max-w-xl mx-auto text-sm">
+            Un outil conçu pour les directeurs de travaux et responsables de chantier.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {
                 icon: BarChart2,
                 color: '#1e3a5f',
-                title: 'Dashboard temps reel',
-                desc: "KPIs instantanes, graphiques d'evolution, vue par equipe. Tout sur un seul ecran.",
+                title: 'Tableau de bord en temps réel',
+                desc: "Avancement par chantier, alertes actives, hommes/jour, demandes de matériaux urgentes. Tout en un coup d'œil.",
               },
               {
                 icon: Bell,
                 color: '#e74c3c',
-                title: 'Alertes automatiques',
-                desc: "Rapport manquant a 17h05 ? WhatsApp automatique au chef d'equipe. Historique complet.",
+                title: 'Alertes automatiques de rapport manquant',
+                desc: "Si un chef d'équipe n'a pas envoyé son rapport à 17h05 (lundi-vendredi), ChantierOps lui envoie automatiquement un rappel sur WhatsApp.",
               },
               {
                 icon: Package,
                 color: '#f39c12',
-                title: 'Gestion des materiaux',
-                desc: "Demandes avec niveau d'urgence, approbation en un clic, export PDF semaine/mois.",
+                title: 'Suivi des demandes de matériaux',
+                desc: "Vos équipes signalent les besoins avec niveau d'urgence. Vous approuvez en un clic depuis votre téléphone.",
               },
               {
                 icon: FileText,
                 color: '#27ae60',
-                title: 'Rapports PDF',
-                desc: 'Rapports hebdomadaires et mensuels par chantier ou par equipe, prets a envoyer.',
+                title: 'Rapports PDF hebdomadaires et mensuels',
+                desc: "Générez en un clic un rapport complet par chantier ou par équipe. Prêt à envoyer à vos clients ou pour votre archivage.",
               },
               {
-                icon: Smartphone,
+                icon: TrendingUp,
                 color: '#3b82f6',
-                title: '100% mobile',
-                desc: "Interface responsive, menu slide-in, utilisable sur n'importe quel telephone.",
+                title: 'Historique et traçabilité',
+                desc: "Retrouvez tous les rapports, alertes et événements de chaque chantier. Utile en cas de litige ou pour les bilans de fin de chantier.",
               },
               {
-                icon: Shield,
-                color: '#8b5cf6',
-                title: 'Sans app pour le terrain',
-                desc: "Les chefs d'equipe utilisent WhatsApp qu'ils ont deja. Zero friction, zero formation.",
+                icon: MessageSquare,
+                color: '#25D366',
+                title: "Rapports WhatsApp : rien à changer",
+                desc: "Vos chefs d'équipe n'ont pas d'application supplémentaire à installer. Ils utilisent WhatsApp qu'ils connaissent déjà.",
               },
             ].map(({ icon: Icon, color, title, desc }) => (
               <div key={title} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{ backgroundColor: color + '15' }}
+                  style={{ backgroundColor: color + '18' }}
                 >
                   <Icon className="w-5 h-5" style={{ color }} />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1.5">{title}</h3>
+                <h3 className="font-semibold text-gray-900 mb-1.5 text-sm">{title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
               </div>
             ))}
@@ -213,114 +265,26 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* WhatsApp example */}
-      <section className="py-16 px-4 sm:px-6 bg-gray-50">
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-              Un rapport en 30 secondes
-            </h2>
-            <p className="text-gray-500 leading-relaxed mb-6">
-              Le chef d&apos;equipe n&apos;a rien de nouveau a apprendre. Il envoie quelques lignes sur WhatsApp
-              comme il le ferait avec n&apos;importe quel message. ChantierOps fait le reste.
-            </p>
-            <ul className="space-y-2">
-              {[
-                "Pas d'application a installer",
-                'Pas de compte a creer',
-                'Fonctionne sur tous les telephones',
-                "Fonctionne hors connexion, le message part des le reseau revenu",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
-                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Fake WhatsApp bubble */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
-              <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
-                <MessageSquare className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <div className="text-sm font-semibold text-gray-900">WhatsApp — Chef equipe</div>
-                <div className="text-xs text-gray-400">Carrelage · Residence Les Cedres</div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="bg-green-50 border border-green-100 rounded-xl rounded-tl-none px-4 py-3 max-w-xs">
-                <p className="text-sm text-gray-800 font-mono leading-relaxed">
-                  Avancement: 75%<br />
-                  HJ: 4<br />
-                  Travaux: pose carrelage R2<br />
-                  Probleme: livraison en retard
-                </p>
-                <p className="text-xs text-gray-400 mt-1.5 text-right">17:02</p>
-              </div>
-              <div className="bg-blue-50 border border-blue-100 rounded-xl rounded-tr-none px-4 py-3 max-w-xs ml-auto text-right">
-                <p className="text-sm text-gray-800">
-                  Rapport enregistre pour Residence Les Cedres
-                </p>
-                <p className="text-xs text-gray-400 mt-1.5">17:02 · ChantierOps</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About */}
-      <section className="py-16 px-4 sm:px-6" id="about">
-        <div className="max-w-2xl mx-auto text-center">
-          <div
-            className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center text-2xl font-bold text-white"
-            style={{ backgroundColor: '#1e3a5f' }}
-          >
-            HM
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-            Pourquoi j&apos;ai construit ChantierOps
+      {/* Benefits summary */}
+      <section className="py-14 px-4 sm:px-6" style={{ backgroundColor: '#f8fafc' }}>
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-10">
+            Ce que vous gagnez concrètement
           </h2>
-          <div className="text-gray-500 leading-relaxed space-y-4 text-left sm:text-center">
-            <p>
-              En travaillant dans le secteur de la construction au Luxembourg, j&apos;ai vu de pres
-              le probleme : les directeurs de chantier passent leur temps au telephone pour savoir
-              ce qui se passe sur le terrain. Les informations arrivent en retard, dispersees dans
-              des messages WhatsApp, des appels, des emails.
-            </p>
-            <p>
-              J&apos;ai voulu construire quelque chose de{' '}
-              <strong className="text-gray-800">simple et realiste</strong> — pas un ERP de plus
-              que personne n&apos;utilise, mais un outil qui s&apos;integre dans ce que les equipes font
-              deja : envoyer des messages WhatsApp.
-            </p>
-            <p>
-              ChantierOps est un projet portfolio full-stack developpe de A a Z :
-              architecture NestJS + Prisma cote backend, Next.js 14 cote frontend,
-              deploye sur Railway, integration Twilio WhatsApp, generation PDF.
-            </p>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-3 justify-center">
-            {['NestJS', 'Next.js 14', 'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Twilio', 'Railway', 'TypeScript'].map((tech) => (
-              <span key={tech} className="px-3 py-1 rounded-full text-xs font-medium border border-gray-200 text-gray-600 bg-gray-50">
-                {tech}
-              </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              "Fini les appels quotidiens pour avoir un bilan des chantiers",
+              "Visibilité immédiate sur tous vos chantiers depuis n'importe où",
+              "Alertes avant que les problèmes s'aggravent",
+              "Rapports PDF générés automatiquement, plus de saisie manuelle",
+              "Vos équipes ne changent pas leurs habitudes",
+              "Historique complet pour la traçabilité et les bilans",
+            ].map((benefit) => (
+              <div key={benefit} className="flex items-start gap-3 bg-white rounded-xl p-4 border border-gray-100">
+                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-gray-700">{benefit}</p>
+              </div>
             ))}
-          </div>
-
-          <div className="mt-8 flex justify-center gap-4">
-            <a
-              href="https://github.com/Hugomelo123"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
-            >
-              <Github className="w-4 h-4" />
-              GitHub
-            </a>
           </div>
         </div>
       </section>
@@ -329,33 +293,39 @@ export default function LandingPage() {
       <section className="py-16 px-4 sm:px-6" style={{ backgroundColor: '#1e3a5f' }}>
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-            Voir ChantierOps en action
+            Essayez ChantierOps maintenant
           </h2>
           <p className="text-blue-200 mb-8 leading-relaxed">
-            La demo est disponible en ligne avec des donnees reelles.
-            Aucune inscription requise.
+            Accès immédiat au tableau de bord avec des données de démonstration.
+            Aucune inscription, aucune carte bancaire.
           </p>
           <Link
             href={DEMO_URL}
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold bg-white hover:bg-gray-100 transition"
+            className="inline-flex items-center gap-2 px-7 py-4 rounded-xl text-base font-bold bg-white hover:bg-gray-100 transition shadow-lg"
             style={{ color: '#1e3a5f' }}
           >
-            Acceder au dashboard
+            Accéder à la démo gratuite
             <ArrowRight className="w-4 h-4" />
           </Link>
+          <p className="text-blue-300 text-xs mt-4">Démo disponible en ligne — chantiers, équipes et rapports inclus</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-6 px-4 sm:px-6 border-t border-gray-100">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
+      <footer className="py-8 px-4 sm:px-6 border-t border-gray-100">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded flex items-center justify-center" style={{ backgroundColor: '#1e3a5f' }}>
-              <HardHat className="w-3 h-3 text-white" />
+            <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#1e3a5f' }}>
+              <HardHat className="w-3.5 h-3.5 text-white" />
             </div>
-            <span>ChantierOps · Projet portfolio · Hugo Melo</span>
+            <span className="font-medium text-gray-600">ChantierOps</span>
+            <span className="text-gray-300">·</span>
+            <span>Gestion de chantiers Luxembourg</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
+            <Link href={DEMO_URL} className="hover:text-gray-600 transition">
+              Démo
+            </Link>
             <a
               href="https://github.com/Hugomelo123/-ChantierOps"
               target="_blank"
@@ -364,9 +334,6 @@ export default function LandingPage() {
             >
               GitHub
             </a>
-            <Link href={DEMO_URL} className="hover:text-gray-600 transition">
-              Dashboard
-            </Link>
           </div>
         </div>
       </footer>
