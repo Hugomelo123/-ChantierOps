@@ -22,7 +22,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
 
-      {/* ── Nav ── */}
+      {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -46,32 +46,34 @@ export default function LandingPage() {
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors hover:opacity-90"
               style={{ backgroundColor: '#1e3a5f' }}
             >
-              Voir la démo
+              Voir la demo
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* ── Hero ── */}
+      {/* Hero */}
       <section className="pt-28 pb-20 px-4 sm:px-6 text-center">
         <div className="max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6 border"
-            style={{ backgroundColor: '#f0f4f8', borderColor: '#c7d8e8', color: '#1e3a5f' }}>
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6 border"
+            style={{ backgroundColor: '#f0f4f8', borderColor: '#c7d8e8', color: '#1e3a5f' }}
+          >
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-            Démo live disponible — Luxembourg
+            Demo live disponible
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-            Gérer vos chantiers
+            Gerez vos chantiers
             <br />
             <span style={{ color: '#1e3a5f' }}>depuis WhatsApp</span>
           </h1>
 
           <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-            ChantierOps connecte les chefs d'équipe sur le terrain avec le directeur de travaux —
-            sans application à installer, sans formation.
+            ChantierOps connecte les chefs d&apos;equipe sur le terrain avec le directeur de travaux.
             Les rapports arrivent via WhatsApp, les alertes partent automatiquement.
+            Sans application a installer, sans formation.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -80,7 +82,7 @@ export default function LandingPage() {
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold text-white shadow-lg hover:opacity-90 transition"
               style={{ backgroundColor: '#1e3a5f' }}
             >
-              Accéder à la démo
+              Acceder a la demo
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
@@ -96,11 +98,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── How it works ── */}
+      {/* How it works */}
       <section className="py-16 px-4 sm:px-6 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900">
-            Comment ça fonctionne
+            Comment ca fonctionne
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -108,25 +110,25 @@ export default function LandingPage() {
                 step: '1',
                 icon: MessageSquare,
                 color: '#25D366',
-                title: 'Chef d\'équipe envoie sur WhatsApp',
-                desc: 'En fin de journée, il envoie son rapport directement depuis WhatsApp. Avancement, hommes·jour, problèmes — en quelques lignes.',
+                title: "Chef d'equipe envoie sur WhatsApp",
+                desc: "En fin de journee, il envoie son rapport directement depuis WhatsApp. Avancement, hommes jour, problemes en quelques lignes.",
               },
               {
                 step: '2',
                 icon: Zap,
                 color: '#1e3a5f',
-                title: 'Le système traite automatiquement',
-                desc: 'ChantierOps analyse le message, met à jour les KPIs du chantier et stocke le rapport. Zéro saisie manuelle.',
+                title: 'Le systeme traite automatiquement',
+                desc: "ChantierOps analyse le message, met a jour les KPIs du chantier et stocke le rapport. Zero saisie manuelle.",
               },
               {
                 step: '3',
                 icon: BarChart2,
                 color: '#f39c12',
-                title: 'Le directeur voit tout en temps réel',
-                desc: 'Dashboard mis à jour instantanément. Si un rapport manque à 17h05, une alerte WhatsApp part automatiquement.',
+                title: 'Le directeur voit tout en temps reel',
+                desc: "Dashboard mis a jour instantanement. Si un rapport manque a 17h05, une alerte WhatsApp part automatiquement.",
               },
             ].map(({ step, icon: Icon, color, title, desc }) => (
-              <div key={step} className="relative">
+              <div key={step}>
                 <div className="flex flex-col items-start gap-4">
                   <div
                     className="w-12 h-12 rounded-2xl flex items-center justify-center"
@@ -136,7 +138,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <div className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color }}>
-                      Étape {step}
+                      Etape {step}
                     </div>
                     <h3 className="text-base font-semibold text-gray-900 mb-2">{title}</h3>
                     <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
@@ -148,52 +150,52 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Features ── */}
+      {/* Features */}
       <section className="py-16 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 text-gray-900">
             Tout ce dont vous avez besoin
           </h2>
           <p className="text-center text-gray-500 mb-12 max-w-xl mx-auto">
-            Une seule plateforme pour suivre l'avancement, gérer les matériaux et piloter vos équipes.
+            Une seule plateforme pour suivre l&apos;avancement, gerer les materiaux et piloter vos equipes.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {
                 icon: BarChart2,
                 color: '#1e3a5f',
-                title: 'Dashboard temps réel',
-                desc: 'KPIs instantanés, graphiques d'évolution, vue par équipe. Tout sur un seul écran.',
+                title: 'Dashboard temps reel',
+                desc: "KPIs instantanes, graphiques d'evolution, vue par equipe. Tout sur un seul ecran.",
               },
               {
                 icon: Bell,
                 color: '#e74c3c',
                 title: 'Alertes automatiques',
-                desc: 'Rapport manquant à 17h05 ? WhatsApp automatique au chef d'équipe. Historique complet.',
+                desc: "Rapport manquant a 17h05 ? WhatsApp automatique au chef d'equipe. Historique complet.",
               },
               {
                 icon: Package,
                 color: '#f39c12',
-                title: 'Gestion des matériaux',
-                desc: 'Demandes avec niveau d'urgence, approbation en un clic, export PDF semaine/mois.',
+                title: 'Gestion des materiaux',
+                desc: "Demandes avec niveau d'urgence, approbation en un clic, export PDF semaine/mois.",
               },
               {
                 icon: FileText,
                 color: '#27ae60',
                 title: 'Rapports PDF',
-                desc: 'Rapports hebdomadaires et mensuels par chantier ou par équipe, prêts à envoyer.',
+                desc: 'Rapports hebdomadaires et mensuels par chantier ou par equipe, prets a envoyer.',
               },
               {
                 icon: Smartphone,
                 color: '#3b82f6',
                 title: '100% mobile',
-                desc: 'Interface responsive, menu slide-in, utilisable sur n'importe quel téléphone.',
+                desc: "Interface responsive, menu slide-in, utilisable sur n'importe quel telephone.",
               },
               {
                 icon: Shield,
                 color: '#8b5cf6',
                 title: 'Sans app pour le terrain',
-                desc: 'Les chefs d'équipe utilisent WhatsApp qu'ils ont déjà. Zéro friction, zéro formation.',
+                desc: "Les chefs d'equipe utilisent WhatsApp qu'ils ont deja. Zero friction, zero formation.",
               },
             ].map(({ icon: Icon, color, title, desc }) => (
               <div key={title} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
@@ -211,7 +213,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── WhatsApp example ── */}
+      {/* WhatsApp example */}
       <section className="py-16 px-4 sm:px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div>
@@ -219,16 +221,16 @@ export default function LandingPage() {
               Un rapport en 30 secondes
             </h2>
             <p className="text-gray-500 leading-relaxed mb-6">
-              Le chef d'équipe n'a rien de nouveau à apprendre. Il envoie quelques lignes sur WhatsApp
-              comme il le ferait avec n'importe quel message. ChantierOps fait le reste.
+              Le chef d&apos;equipe n&apos;a rien de nouveau a apprendre. Il envoie quelques lignes sur WhatsApp
+              comme il le ferait avec n&apos;importe quel message. ChantierOps fait le reste.
             </p>
             <ul className="space-y-2">
               {[
-                'Pas d'application à installer',
-                'Pas de compte à créer',
-                'Fonctionne sur tous les téléphones',
-                'Même hors connexion, le message part dès le réseau revenu',
-              ].map(item => (
+                "Pas d'application a installer",
+                'Pas de compte a creer',
+                'Fonctionne sur tous les telephones',
+                "Fonctionne hors connexion, le message part des le reseau revenu",
+              ].map((item) => (
                 <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                   {item}
@@ -237,15 +239,15 @@ export default function LandingPage() {
             </ul>
           </div>
 
-          {/* Fake WhatsApp message bubble */}
+          {/* Fake WhatsApp bubble */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
               <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
                 <MessageSquare className="w-4 h-4 text-white" />
               </div>
               <div>
-                <div className="text-sm font-semibold text-gray-900">WhatsApp — Chef équipe</div>
-                <div className="text-xs text-gray-400">Carrelage · Résidence Les Cèdres</div>
+                <div className="text-sm font-semibold text-gray-900">WhatsApp — Chef equipe</div>
+                <div className="text-xs text-gray-400">Carrelage · Residence Les Cedres</div>
               </div>
             </div>
             <div className="space-y-2">
@@ -254,13 +256,13 @@ export default function LandingPage() {
                   Avancement: 75%<br />
                   HJ: 4<br />
                   Travaux: pose carrelage R2<br />
-                  Problème: livraison en retard
+                  Probleme: livraison en retard
                 </p>
-                <p className="text-xs text-gray-400 mt-1.5 text-right">17:02 ✓✓</p>
+                <p className="text-xs text-gray-400 mt-1.5 text-right">17:02</p>
               </div>
               <div className="bg-blue-50 border border-blue-100 rounded-xl rounded-tr-none px-4 py-3 max-w-xs ml-auto text-right">
                 <p className="text-sm text-gray-800">
-                  ✅ Rapport enregistré pour Résidence Les Cèdres
+                  Rapport enregistre pour Residence Les Cedres
                 </p>
                 <p className="text-xs text-gray-400 mt-1.5">17:02 · ChantierOps</p>
               </div>
@@ -269,34 +271,40 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── About ── */}
+      {/* About */}
       <section className="py-16 px-4 sm:px-6" id="about">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center text-2xl font-bold text-white"
-            style={{ backgroundColor: '#1e3a5f' }}>
+          <div
+            className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center text-2xl font-bold text-white"
+            style={{ backgroundColor: '#1e3a5f' }}
+          >
             HM
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Pourquoi j'ai construit ChantierOps</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            Pourquoi j&apos;ai construit ChantierOps
+          </h2>
           <div className="text-gray-500 leading-relaxed space-y-4 text-left sm:text-center">
             <p>
-              En travaillant dans le secteur de la construction au Luxembourg, j'ai vu de près le problème :
-              les directeurs de chantier passent leur temps au téléphone pour savoir ce qui se passe sur le terrain.
-              Les informations arrivent en retard, dispersées dans des messages WhatsApp, des appels, des emails.
+              En travaillant dans le secteur de la construction au Luxembourg, j&apos;ai vu de pres
+              le probleme : les directeurs de chantier passent leur temps au telephone pour savoir
+              ce qui se passe sur le terrain. Les informations arrivent en retard, dispersees dans
+              des messages WhatsApp, des appels, des emails.
             </p>
             <p>
-              J'ai voulu construire quelque chose de <strong className="text-gray-800">simple et réaliste</strong> —
-              pas un ERP de plus que personne n'utilise, mais un outil qui s'intègre dans ce que les équipes font
-              déjà : envoyer des messages WhatsApp.
+              J&apos;ai voulu construire quelque chose de{' '}
+              <strong className="text-gray-800">simple et realiste</strong> — pas un ERP de plus
+              que personne n&apos;utilise, mais un outil qui s&apos;integre dans ce que les equipes font
+              deja : envoyer des messages WhatsApp.
             </p>
             <p>
-              ChantierOps est un projet portfolio full-stack que j'ai développé de A à Z :
-              architecture NestJS + Prisma côté backend, Next.js 14 côté frontend, déployé sur Railway,
-              intégration Twilio WhatsApp, génération PDF.
+              ChantierOps est un projet portfolio full-stack developpe de A a Z :
+              architecture NestJS + Prisma cote backend, Next.js 14 cote frontend,
+              deploye sur Railway, integration Twilio WhatsApp, generation PDF.
             </p>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3 justify-center">
-            {['NestJS', 'Next.js 14', 'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Twilio', 'Railway', 'TypeScript'].map(tech => (
+            {['NestJS', 'Next.js 14', 'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Twilio', 'Railway', 'TypeScript'].map((tech) => (
               <span key={tech} className="px-3 py-1 rounded-full text-xs font-medium border border-gray-200 text-gray-600 bg-gray-50">
                 {tech}
               </span>
@@ -317,14 +325,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {/* CTA */}
       <section className="py-16 px-4 sm:px-6" style={{ backgroundColor: '#1e3a5f' }}>
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
             Voir ChantierOps en action
           </h2>
           <p className="text-blue-200 mb-8 leading-relaxed">
-            La démo est disponible en ligne avec des données réelles.
+            La demo est disponible en ligne avec des donnees reelles.
             Aucune inscription requise.
           </p>
           <Link
@@ -332,13 +340,13 @@ export default function LandingPage() {
             className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold bg-white hover:bg-gray-100 transition"
             style={{ color: '#1e3a5f' }}
           >
-            Accéder au dashboard
+            Acceder au dashboard
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
 
-      {/* ── Footer ── */}
+      {/* Footer */}
       <footer className="py-6 px-4 sm:px-6 border-t border-gray-100">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
           <div className="flex items-center gap-2">
@@ -348,7 +356,12 @@ export default function LandingPage() {
             <span>ChantierOps · Projet portfolio · Hugo Melo</span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="https://github.com/Hugomelo123/-ChantierOps" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 transition">
+            <a
+              href="https://github.com/Hugomelo123/-ChantierOps"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-600 transition"
+            >
               GitHub
             </a>
             <Link href={DEMO_URL} className="hover:text-gray-600 transition">
