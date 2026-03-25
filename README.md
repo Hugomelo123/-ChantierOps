@@ -1,110 +1,108 @@
 # ChantierOps
 
-**Savoir ce qui se passe sur vos chantiers, sans passer vos journées au téléphone.**
+> Savoir ce qui se passe sur vos chantiers, en temps réel — sans changer les habitudes de vos équipes.
 
-ChantierOps connecte vos chefs d'équipe — via WhatsApp qu'ils utilisent déjà — à un tableau de bord en temps réel pour les directeurs de travaux.
-
-**Démo en ligne →** [chantierops-production.up.railway.app](https://chantierops-production.up.railway.app/)
+**Démo en ligne :** [chantierops-production.up.railway.app](https://chantierops-production.up.railway.app/)
 
 ---
 
-## Le problème
+## Le problème que vous connaissez bien
 
-Vous passez votre journée à appeler vos chefs d'équipe pour savoir où en sont les travaux.
-Les rapports arrivent le lendemain, quand ils arrivent.
-Un problème sur le chantier — vous l'apprenez trop tard.
+Vous gérez plusieurs chantiers. En fin de journée, vous ne savez pas vraiment ce qui s'est passé sur chacun d'eux.
 
-## La solution
+Vous appelez. Le chef d'équipe répond "ça avance". Vous raccrochez sans vraiment être plus avancé.
 
-**1. Le chef d'équipe envoie son rapport sur WhatsApp en fin de journée**
+Les rapports arrivent le lendemain matin — quand ils arrivent. Un retard de livraison, un problème de sécurité, une équipe qui manque de matériaux : vous l'apprenez trop tard pour réagir.
+
+---
+
+## Ce que fait ChantierOps
+
+Vos chefs d'équipe envoient leur compte-rendu de fin de journée **via WhatsApp**, comme ils le feraient avec n'importe quel message. ChantierOps reçoit ce message, le traite automatiquement, et met à jour votre tableau de bord en temps réel.
+
+Vous ouvrez l'application — vous voyez l'état de tous vos chantiers, les alertes, les demandes de matériaux, les équipes qui n'ont pas encore rendu leur rapport.
+
+Rien à installer pour vos équipes. Aucune formation nécessaire.
+
+---
+
+## Un rapport de chantier en 30 secondes
+
+Le chef d'équipe envoie simplement :
 
 ```
 Avancement: 75%
 HJ: 4
-Travaux: pose carrelage R2
-Probleme: livraison en retard
+Travaux: pose carrelage niveau 2
+Problème: livraison béton en retard
 ```
 
-**2. ChantierOps met à jour le tableau de bord automatiquement**
-
-Avancement, hommes/jour, alertes — tout est mis à jour instantanément.
-
-**3. Vous êtes alerté si quelque chose ne va pas**
-
-Rapport manquant à 17h05 ? Problème signalé ? Vous recevez une alerte immédiatement.
+C'est tout. ChantierOps fait le reste.
 
 ---
 
-## Ce que ça change concrètement
+## Ce que vous y gagnez
 
-- Fini les appels quotidiens pour avoir un bilan des chantiers
-- Visibilité immédiate sur tous vos chantiers depuis n'importe où
-- Alertes automatiques si un rapport est manquant ou un problème détecté
-- Rapports PDF hebdomadaires et mensuels générés en un clic
-- Vos équipes ne changent rien — elles utilisent WhatsApp qu'elles connaissent déjà
+**Vous arrêtez de courir après l'information.**
+Le tableau de bord se met à jour dès que le rapport arrive. Vous savez, sans appeler.
 
----
+**Vous êtes alerté avant que ça devienne un problème.**
+Si un rapport n'est pas arrivé à 17h05, ChantierOps envoie automatiquement un rappel WhatsApp au chef d'équipe concerné.
 
-## Fonctionnalités
+**Vous avez tout par écrit, automatiquement.**
+Chaque rapport, chaque alerte, chaque demande de matériau est enregistré. Un clic pour générer le rapport PDF de la semaine ou du mois — prêt à envoyer à votre client ou à archiver.
 
-| Fonctionnalité | Description |
-|---|---|
-| Tableau de bord temps réel | KPIs par chantier, alertes actives, hommes/jour |
-| Rapports via WhatsApp | Les chefs d'équipe envoient un message, le système fait le reste |
-| Alertes automatiques | Rappel WhatsApp si rapport manquant à 17h05 (lun–ven) |
-| Gestion des matériaux | Demandes avec niveau d'urgence, approbation en un clic |
-| Rapports PDF | Hebdomadaires et mensuels par chantier ou par équipe |
-| Historique complet | Traçabilité de tous les rapports, alertes et événements |
+**Vos équipes ne changent rien.**
+Ils utilisent WhatsApp qu'ils ont déjà sur leur téléphone. Pas d'application supplémentaire, pas de mot de passe, pas de formation.
 
 ---
 
-## Installation
+## Ce que vous voyez dans le tableau de bord
 
-### Prérequis
-- Node.js 20+
-- PostgreSQL 15+
-- Compte Twilio (intégration WhatsApp)
+- L'avancement de chaque chantier et de chaque équipe
+- Les alertes actives (rapport manquant, problème signalé, matériau urgent)
+- Le nombre d'hommes/jour par chantier cette semaine et ce mois
+- Les demandes de matériaux en attente d'approbation
+- L'historique complet de chaque chantier
 
-### Lancement rapide
+---
+
+## Essayer
+
+La démo est accessible en ligne, sans inscription, avec des données réelles de démonstration.
+
+**[Accéder au tableau de bord →](https://chantierops-production.up.railway.app/dashboard)**
+
+---
+
+<details>
+<summary>Informations techniques (pour votre équipe IT)</summary>
+
+### Stack
+- Frontend : Next.js 14, Tailwind CSS
+- Backend : NestJS, Prisma, PostgreSQL
+- Messagerie : Twilio WhatsApp Business API
+- Déploiement : Railway / Docker
+
+### Installation locale
 
 ```bash
 git clone https://github.com/Hugomelo123/-ChantierOps.git
 cd -ChantierOps
-
-# Backend
 cp backend/.env.example backend/.env
-cd backend && npm install
-npx prisma migrate dev --name init
-npm run seed
-npm run start:dev
+# Remplir les variables (DATABASE_URL, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# Frontend (dans un autre terminal)
-cd frontend && npm install
-npm run dev
+cd backend && npm install && npx prisma migrate dev && npm run seed && npm run start:dev
+cd frontend && npm install && npm run dev
 ```
 
-Avec Docker :
-
-```bash
-docker-compose up --build
-```
-
-### Variables d'environnement
+### Variables d'environnement requises
 
 ```env
-DATABASE_URL="postgresql://chantierops:chantierops_secret@localhost:5432/chantierops"
-PORT=3001
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DATABASE_URL=postgresql://...
+TWILIO_ACCOUNT_SID=AC...
+TWILIO_AUTH_TOKEN=...
 TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
 ```
 
-### Configuration WhatsApp
-
-1. Créer un compte sur [twilio.com](https://www.twilio.com)
-2. Activer le WhatsApp Sandbox
-3. Configurer le webhook : `https://votre-domaine.com/api/whatsapp/webhook`
-
----
-
-*Construit pour répondre à un besoin réel du secteur de la construction au Luxembourg.*
+</details>
