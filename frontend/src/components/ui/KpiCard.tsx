@@ -22,15 +22,15 @@ export default function KpiCard({ title, value, icon: Icon, color, subtitle, tre
   const colors = colorMap[color];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
       <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-500">{title}</p>
-          <p className={clsx('text-3xl font-bold mt-1', colors.text)}>{value}</p>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs md:text-sm font-medium text-gray-500 truncate">{title}</p>
+          <p className={clsx('text-2xl md:text-3xl font-bold mt-1', colors.text)}>{value}</p>
           {subtitle && <p className="text-xs text-gray-400 mt-1">{subtitle}</p>}
         </div>
-        <div className={clsx('w-12 h-12 rounded-xl flex items-center justify-center', colors.icon)}>
-          <Icon className="w-6 h-6" />
+        <div className={clsx('w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0 ml-2', colors.icon)}>
+          <Icon className="w-5 h-5 md:w-6 md:h-6" />
         </div>
       </div>
       {trend && (

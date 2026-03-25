@@ -83,23 +83,23 @@ export default function Dashboard() {
   const now = new Date();
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Tableau de bord</h1>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5 truncate">
             {now.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 flex-shrink-0">
           <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400 animate-pulse' : 'bg-green-500 animate-pulse'}`} />
-          {isLoading ? 'Chargement...' : 'Mis à jour automatiquement'}
+          <span className="hidden sm:inline">{isLoading ? 'Chargement...' : 'Mis à jour automatiquement'}</span>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
         <KpiCard
           title="Chantiers actifs"
           value={isLoading ? '…' : (kpis?.kpis.chantiersActifs ?? 0)}
@@ -138,9 +138,9 @@ export default function Dashboard() {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* H/J per day chart */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
           <h2 className="text-base font-semibold text-gray-800 mb-4">Hommes·jour — 7 derniers jours</h2>
           {rapports7jData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
@@ -160,7 +160,7 @@ export default function Dashboard() {
         </div>
 
         {/* Status pie */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
           <h2 className="text-base font-semibold text-gray-800 mb-4">Statut des chantiers</h2>
           {statusData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
@@ -193,9 +193,9 @@ export default function Dashboard() {
       </div>
 
       {/* Bottom row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Chantiers en alerte */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-gray-800">Chantiers en alerte</h2>
             <AlertTriangle className="w-5 h-5 text-red-500" />
@@ -228,7 +228,7 @@ export default function Dashboard() {
         </div>
 
         {/* Demandes urgentes */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-gray-800">Matériaux urgents</h2>
             <Package className="w-5 h-5 text-orange-500" />
@@ -261,7 +261,7 @@ export default function Dashboard() {
       </div>
 
       {/* Equipe overview */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
         <h2 className="text-base font-semibold text-gray-800 mb-4">Vue par équipe</h2>
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={equipeData} layout="vertical">

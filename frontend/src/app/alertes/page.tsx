@@ -41,11 +41,11 @@ export default function AlertesPage() {
   const ouvertes = alertes?.filter(a => !a.resolue).length || 0;
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Alertes</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Alertes</h1>
           <p className="text-sm text-gray-500 mt-0.5">
             {ouvertes} alerte{ouvertes !== 1 ? 's' : ''} ouverte{ouvertes !== 1 ? 's' : ''}
           </p>
@@ -53,7 +53,7 @@ export default function AlertesPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <select
           className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
           value={equipeFilter}

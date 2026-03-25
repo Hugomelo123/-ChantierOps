@@ -104,7 +104,7 @@ function CreateDemandeModal({ onClose }: { onClose: () => void }) {
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Quantité *</label>
               <input
@@ -213,7 +213,7 @@ export default function MateriauxPage() {
   };
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-5">
       {showCreate && <CreateDemandeModal onClose={() => setShowCreate(false)} />}
 
       {/* Toast WhatsApp confirmation */}
@@ -231,35 +231,35 @@ export default function MateriauxPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Matériaux</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Matériaux</h1>
           <p className="text-sm text-gray-500 mt-0.5">{demandes?.length || 0} demande(s)</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => downloadPdf('semaine')}
-            className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
           >
-            <Download className="w-4 h-4" /> PDF Semaine
+            <Download className="w-4 h-4" /> <span className="hidden sm:inline">PDF </span>Semaine
           </button>
           <button
             onClick={() => downloadPdf('mois')}
-            className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
           >
-            <Download className="w-4 h-4" /> PDF Mois
+            <Download className="w-4 h-4" /> <span className="hidden sm:inline">PDF </span>Mois
           </button>
           <button
             onClick={() => downloadPdf('chantier')}
-            className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
           >
-            <Building2 className="w-4 h-4" /> PDF par Chantier
+            <Building2 className="w-4 h-4" /> PDF Chantier
           </button>
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-700 text-white rounded-lg text-sm font-medium hover:bg-primary-800"
+            className="flex items-center gap-1.5 px-4 py-2 bg-primary-700 text-white rounded-lg text-sm font-medium hover:bg-primary-800"
           >
-            <Plus className="w-4 h-4" /> Nouvelle demande
+            <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Nouvelle </span>Demande
           </button>
         </div>
       </div>
@@ -306,7 +306,8 @@ export default function MateriauxPage() {
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[600px]">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-100">
                 <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Matériau</th>
@@ -365,6 +366,7 @@ export default function MateriauxPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

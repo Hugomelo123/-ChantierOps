@@ -223,21 +223,22 @@ function ChantiersContent() {
   }) || [];
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-5">
       {showCreate && <CreateChantierModal onClose={() => setShowCreate(false)} />}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Chantiers</h1>
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Chantiers</h1>
           <p className="text-sm text-gray-500 mt-0.5">{filtered.length} chantier(s)</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-700 text-white rounded-lg text-sm font-medium hover:bg-primary-800"
+          className="flex items-center gap-2 px-3 md:px-4 py-2 bg-primary-700 text-white rounded-lg text-sm font-medium hover:bg-primary-800 flex-shrink-0"
         >
           <Plus className="w-4 h-4" />
-          Nouveau chantier
+          <span className="hidden sm:inline">Nouveau chantier</span>
+          <span className="sm:hidden">Nouveau</span>
         </button>
       </div>
 

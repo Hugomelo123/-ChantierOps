@@ -10,6 +10,7 @@ import {
   MessageSquare,
   Settings,
   HardHat,
+  X,
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -38,78 +39,113 @@ const navItems = [
   { href: '/whatsapp', label: 'WhatsApp', icon: MessageSquare },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
+  const navigate = (href: string) => {
+    router.push(href);
+    onClose();
+  };
+
   return (
-    <aside className="w-64 h-screen flex flex-col" style={{ backgroundColor: '#1e3a5f' }}>
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
-        <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
-          <HardHat className="w-5 h-5 text-white" />
-        </div>
-        <div>
-          <div className="text-white font-bold text-lg leading-tight">ChantierOps</div>
-          <div className="text-blue-300 text-xs">Luxembourg</div>
-        </div>
-      </div>
+    <>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={onClose}
+        />
+      )}
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map(({ href, label, icon: Icon }) => (
-          <button
-            key={href}
-            onClick={() => router.push(href)}
-            className={clsx(
-              'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors text-left',
-              pathname === href
-                ? 'bg-white/15 text-white'
-                : 'text-blue-200 hover:bg-white/10 hover:text-white'
-            )}
-          >
-            <Icon className="w-4 h-4 flex-shrink-0" />
-            {label}
-          </button>
-        ))}
-
-        {/* Équipes section */}
-        <div className="pt-4">
-          <div className="px-4 pb-2 text-xs font-semibold text-blue-400 uppercase tracking-wider">
-            Équipes
+      <aside
+        className={clsx(
+          'fixed inset-y-0 left-0 z-50 w-64 h-screen flex flex-col transition-transform duration-300',
+          'md:relative md:translate-x-0 md:z-auto',
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+        style={{ backgroundColor: '#1e3a5f' }}
+      >
+        {/* Logo */}
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
+          <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <HardHat className="w-5 h-5 text-white" />
           </div>
-          {EQUIPES.map((equipe) => (
+          <div className="flex-1 min-w-0">
+            <div className="text-white font-bold text-lg leading-tight">ChantierOps</div>
+            <div className="text-blue-300 text-xs">Luxembourg</div>
+          </div>
+          {/* Close button — mobile only */}
+          <button
+            onClick={onClose}
+            className="md:hidden text-white/70 hover:text-white p-1 -mr-2"
+            aria-label="Fermer le menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {navItems.map(({ href, label, icon: Icon }) => (
             <button
-              key={equipe}
-              onClick={() => router.push(`/chantiers?equipe=${equipe}`)}
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-white/10 hover:text-white transition-colors text-left"
+              key={href}
+              onClick={() => navigate(href)}
+              className={clsx(
+                'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors text-left',
+                pathname === href
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/10 hover:text-white'
+              )}
             >
-              <div className={clsx('w-2.5 h-2.5 rounded-full', EQUIPE_COLORS[equipe])} />
-              {EQUIPE_LABELS[equipe]}
+              <Icon className="w-4 h-4 flex-shrink-0" />
+              {label}
             </button>
           ))}
-        </div>
-      </nav>
 
-      {/* Footer */}
-      <div className="px-3 py-3 border-t border-white/10">
-        <button
-          onClick={() => router.push('/settings')}
-          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-white/10 hover:text-white transition-colors"
-        >
-          <Settings className="w-4 h-4" />
-          Paramètres
-        </button>
-        <div className="mt-2 px-4 py-2 space-y-1">
-          {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-amber-500/20 border border-amber-400/30 rounded-md">
-              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              <span className="text-xs font-medium text-amber-300">Mode démonstration</span>
+          {/* Équipes section */}
+          <div className="pt-4">
+            <div className="px-4 pb-2 text-xs font-semibold text-blue-400 uppercase tracking-wider">
+              Équipes
             </div>
-          )}
-          <div className="text-xs text-blue-400">v1.0.0 · © 2026 ChantierOps</div>
+            {EQUIPES.map((equipe) => (
+              <button
+                key={equipe}
+                onClick={() => navigate(`/chantiers?equipe=${equipe}`)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-white/10 hover:text-white transition-colors text-left"
+              >
+                <div className={clsx('w-2.5 h-2.5 rounded-full flex-shrink-0', EQUIPE_COLORS[equipe])} />
+                {EQUIPE_LABELS[equipe]}
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        {/* Footer */}
+        <div className="px-3 py-3 border-t border-white/10">
+          <button
+            onClick={() => navigate('/settings')}
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            <Settings className="w-4 h-4" />
+            Paramètres
+          </button>
+          <div className="mt-2 px-4 py-2 space-y-1">
+            {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-amber-500/20 border border-amber-400/30 rounded-md">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-xs font-medium text-amber-300">Mode démonstration</span>
+              </div>
+            )}
+            <div className="text-xs text-blue-400">v1.0.0 · © 2026 ChantierOps</div>
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
