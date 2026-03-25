@@ -31,7 +31,7 @@ const EQUIPE_COLORS: Record<string, string> = {
 };
 
 const navItems = [
-  { href: '/', label: 'Tableau de bord', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
   { href: '/chantiers', label: 'Chantiers', icon: Building2 },
   { href: '/rapports', label: 'Rapports', icon: FileText },
   { href: '/alertes', label: 'Alertes', icon: AlertTriangle },

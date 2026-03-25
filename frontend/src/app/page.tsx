@@ -1,280 +1,363 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { dashboardApi, alertesApi } from '@/lib/api';
-import KpiCard from '@/components/ui/KpiCard';
-import Badge from '@/components/ui/Badge';
+import Link from 'next/link';
 import {
-  Building2,
-  AlertTriangle,
+  HardHat,
+  MessageSquare,
+  Bell,
+  BarChart2,
   FileText,
   Package,
-  Users,
-  Clock,
+  ArrowRight,
+  Github,
   CheckCircle,
-  TrendingUp,
+  Smartphone,
+  Zap,
+  Shield,
 } from 'lucide-react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from 'recharts';
 
-const EQUIPE_LABELS: Record<string, string> = {
-  CARRELAGE: 'Carrelage',
-  MACONNERIE: 'Maçonnerie',
-  FACADE: 'Façade',
-  ELECTRICITE: 'Électricité',
-};
+const DEMO_URL = '/dashboard';
 
-const EQUIPE_COLORS: Record<string, string> = {
-  CARRELAGE: '#3b82f6',
-  MACONNERIE: '#d97706',
-  FACADE: '#059669',
-  ELECTRICITE: '#eab308',
-};
-
-const STATUS_COLORS: Record<string, string> = {
-  OK: '#27ae60',
-  ALERTE: '#e74c3c',
-  PARTIEL: '#f39c12',
-};
-
-export default function Dashboard() {
-  const { data: kpis, isLoading } = useQuery({
-    queryKey: ['dashboard-kpis'],
-    queryFn: dashboardApi.getKpis,
-    refetchInterval: 60000,
-  });
-
-  const { data: alertes } = useQuery({
-    queryKey: ['alertes-ouvertes'],
-    queryFn: () => alertesApi.getAll({ resolue: false }),
-  });
-
-  const statusData = Object.entries(kpis?.chantiersByStatus || {}).map(([k, v]) => ({
-    name: k,
-    value: v,
-    color: STATUS_COLORS[k] || '#666',
-  }));
-
-  const equipeData = Object.entries(kpis?.chantiersByEquipe || {}).map(([k, v]) => ({
-    name: EQUIPE_LABELS[k] || k,
-    chantiers: v,
-    alertes: kpis?.alertesByEquipe?.[k] || 0,
-  }));
-
-  const rapports7jGrouped: Record<string, { date: string; hj: number }> = {};
-  for (const r of kpis?.rapports7j || []) {
-    const d = new Date(r.date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' });
-    if (!rapports7jGrouped[d]) rapports7jGrouped[d] = { date: d, hj: 0 };
-    rapports7jGrouped[d].hj += r.homesJour;
-  }
-  const rapports7jData = Object.values(rapports7jGrouped);
-
-  const now = new Date();
-
+export default function LandingPage() {
   return (
-    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Tableau de bord</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-0.5 truncate">
-            {now.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+    <div className="min-h-screen bg-white text-gray-900">
+
+      {/* ── Nav ── */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#1e3a5f' }}>
+              <HardHat className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-bold text-gray-900">ChantierOps</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/Hugomelo123/-ChantierOps"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              <Github className="w-4 h-4" />
+              GitHub
+            </a>
+            <Link
+              href={DEMO_URL}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors hover:opacity-90"
+              style={{ backgroundColor: '#1e3a5f' }}
+            >
+              Voir la démo
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* ── Hero ── */}
+      <section className="pt-28 pb-20 px-4 sm:px-6 text-center">
+        <div className="max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6 border"
+            style={{ backgroundColor: '#f0f4f8', borderColor: '#c7d8e8', color: '#1e3a5f' }}>
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            Démo live disponible — Luxembourg
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
+            Gérer vos chantiers
+            <br />
+            <span style={{ color: '#1e3a5f' }}>depuis WhatsApp</span>
+          </h1>
+
+          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+            ChantierOps connecte les chefs d'équipe sur le terrain avec le directeur de travaux —
+            sans application à installer, sans formation.
+            Les rapports arrivent via WhatsApp, les alertes partent automatiquement.
           </p>
-        </div>
-        <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 flex-shrink-0">
-          <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400 animate-pulse' : 'bg-green-500 animate-pulse'}`} />
-          <span className="hidden sm:inline">{isLoading ? 'Chargement...' : 'Mis à jour automatiquement'}</span>
-        </div>
-      </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-        <KpiCard
-          title="Chantiers actifs"
-          value={isLoading ? '…' : (kpis?.kpis.chantiersActifs ?? 0)}
-          icon={Building2}
-          color="blue"
-          subtitle="En cours"
-        />
-        <KpiCard
-          title="Alertes ouvertes"
-          value={isLoading ? '…' : (kpis?.kpis.alertesOuvertes ?? 0)}
-          icon={AlertTriangle}
-          color="red"
-          subtitle="À traiter"
-        />
-        <KpiCard
-          title="Rapports aujourd'hui"
-          value={isLoading ? '…' : (kpis?.kpis.rapportsAujourdhui ?? 0)}
-          icon={FileText}
-          color="green"
-          subtitle="Reçus"
-        />
-        <KpiCard
-          title="Demandes urgentes"
-          value={isLoading ? '…' : (kpis?.kpis.demandesUrgentes ?? 0)}
-          icon={Package}
-          color="orange"
-          subtitle="Matériaux"
-        />
-        <KpiCard
-          title="Hommes·jour / mois"
-          value={isLoading ? '…' : (kpis?.kpis.homesJourMois ?? 0)}
-          icon={Users}
-          color="yellow"
-          subtitle="Ce mois-ci"
-        />
-      </div>
-
-      {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        {/* H/J per day chart */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
-          <h2 className="text-base font-semibold text-gray-800 mb-4">Hommes·jour — 7 derniers jours</h2>
-          {rapports7jData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={rapports7jData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
-                <Bar dataKey="hj" name="H/J" fill="#1e3a5f" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-48 flex items-center justify-center text-gray-400 text-sm">
-              Aucune donnée disponible
-            </div>
-          )}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href={DEMO_URL}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold text-white shadow-lg hover:opacity-90 transition"
+              style={{ backgroundColor: '#1e3a5f' }}
+            >
+              Accéder à la démo
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <a
+              href="https://github.com/Hugomelo123/-ChantierOps"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold text-gray-700 border border-gray-200 hover:bg-gray-50 transition"
+            >
+              <Github className="w-4 h-4" />
+              Voir le code
+            </a>
+          </div>
         </div>
+      </section>
 
-        {/* Status pie */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
-          <h2 className="text-base font-semibold text-gray-800 mb-4">Statut des chantiers</h2>
-          {statusData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
-              <PieChart>
-                <Pie
-                  data={statusData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={80}
-                  paddingAngle={3}
-                  dataKey="value"
+      {/* ── How it works ── */}
+      <section className="py-16 px-4 sm:px-6 bg-gray-50">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900">
+            Comment ça fonctionne
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                step: '1',
+                icon: MessageSquare,
+                color: '#25D366',
+                title: 'Chef d\'équipe envoie sur WhatsApp',
+                desc: 'En fin de journée, il envoie son rapport directement depuis WhatsApp. Avancement, hommes·jour, problèmes — en quelques lignes.',
+              },
+              {
+                step: '2',
+                icon: Zap,
+                color: '#1e3a5f',
+                title: 'Le système traite automatiquement',
+                desc: 'ChantierOps analyse le message, met à jour les KPIs du chantier et stocke le rapport. Zéro saisie manuelle.',
+              },
+              {
+                step: '3',
+                icon: BarChart2,
+                color: '#f39c12',
+                title: 'Le directeur voit tout en temps réel',
+                desc: 'Dashboard mis à jour instantanément. Si un rapport manque à 17h05, une alerte WhatsApp part automatiquement.',
+              },
+            ].map(({ step, icon: Icon, color, title, desc }) => (
+              <div key={step} className="relative">
+                <div className="flex flex-col items-start gap-4">
+                  <div
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                    style={{ backgroundColor: color + '20' }}
+                  >
+                    <Icon className="w-6 h-6" style={{ color }} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color }}>
+                      Étape {step}
+                    </div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-2">{title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Features ── */}
+      <section className="py-16 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 text-gray-900">
+            Tout ce dont vous avez besoin
+          </h2>
+          <p className="text-center text-gray-500 mb-12 max-w-xl mx-auto">
+            Une seule plateforme pour suivre l'avancement, gérer les matériaux et piloter vos équipes.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              {
+                icon: BarChart2,
+                color: '#1e3a5f',
+                title: 'Dashboard temps réel',
+                desc: 'KPIs instantanés, graphiques d'évolution, vue par équipe. Tout sur un seul écran.',
+              },
+              {
+                icon: Bell,
+                color: '#e74c3c',
+                title: 'Alertes automatiques',
+                desc: 'Rapport manquant à 17h05 ? WhatsApp automatique au chef d'équipe. Historique complet.',
+              },
+              {
+                icon: Package,
+                color: '#f39c12',
+                title: 'Gestion des matériaux',
+                desc: 'Demandes avec niveau d'urgence, approbation en un clic, export PDF semaine/mois.',
+              },
+              {
+                icon: FileText,
+                color: '#27ae60',
+                title: 'Rapports PDF',
+                desc: 'Rapports hebdomadaires et mensuels par chantier ou par équipe, prêts à envoyer.',
+              },
+              {
+                icon: Smartphone,
+                color: '#3b82f6',
+                title: '100% mobile',
+                desc: 'Interface responsive, menu slide-in, utilisable sur n'importe quel téléphone.',
+              },
+              {
+                icon: Shield,
+                color: '#8b5cf6',
+                title: 'Sans app pour le terrain',
+                desc: 'Les chefs d'équipe utilisent WhatsApp qu'ils ont déjà. Zéro friction, zéro formation.',
+              },
+            ].map(({ icon: Icon, color, title, desc }) => (
+              <div key={title} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                  style={{ backgroundColor: color + '15' }}
                 >
-                  {statusData.map((entry, i) => (
-                    <Cell key={i} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend
-                  formatter={(value) => <span className="text-xs">{value}</span>}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-48 flex items-center justify-center text-gray-400 text-sm">
-              Aucun chantier actif
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-        {/* Chantiers en alerte */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-gray-800">Chantiers en alerte</h2>
-            <AlertTriangle className="w-5 h-5 text-red-500" />
-          </div>
-          {kpis?.chantiersAlerte && kpis.chantiersAlerte.length > 0 ? (
-            <div className="space-y-3">
-              {kpis.chantiersAlerte.map((c) => (
-                <div key={c.id} className="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-100">
-                  <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{c.nom}</p>
-                    <p className="text-xs text-gray-500">{c.adresse}, {c.ville}</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {(c as any).equipes?.map((e: any) => (
-                        <span key={e.configEquipe.type} className="text-xs bg-red-100 text-red-700 px-1.5 py-0.5 rounded">
-                          {EQUIPE_LABELS[e.configEquipe.type] || e.configEquipe.type}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  <Icon className="w-5 h-5" style={{ color }} />
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-32 text-gray-400">
-              <CheckCircle className="w-10 h-10 text-green-400 mb-2" />
-              <p className="text-sm">Aucune alerte active</p>
-            </div>
-          )}
-        </div>
-
-        {/* Demandes urgentes */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-gray-800">Matériaux urgents</h2>
-            <Package className="w-5 h-5 text-orange-500" />
+                <h3 className="font-semibold text-gray-900 mb-1.5">{title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+              </div>
+            ))}
           </div>
-          {kpis?.dernieresUrgences && kpis.dernieresUrgences.length > 0 ? (
-            <div className="space-y-3">
-              {kpis.dernieresUrgences.map((d) => (
-                <div key={d.id} className="flex items-start gap-3 p-3 bg-orange-50 rounded-lg border border-orange-100">
-                  <Package className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{d.materiau}</p>
-                    <p className="text-xs text-gray-500">
-                      {d.quantite} {d.unite} · {d.chantier?.nom}
-                    </p>
-                    <div className="flex gap-1 mt-1">
-                      <Badge variant={d.urgence.toLowerCase() as any}>{d.urgence}</Badge>
-                      <Badge variant="default">{EQUIPE_LABELS[d.equipe] || d.equipe}</Badge>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-32 text-gray-400">
-              <CheckCircle className="w-10 h-10 text-green-400 mb-2" />
-              <p className="text-sm">Aucune demande urgente</p>
-            </div>
-          )}
         </div>
-      </div>
+      </section>
 
-      {/* Equipe overview */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
-        <h2 className="text-base font-semibold text-gray-800 mb-4">Vue par équipe</h2>
-        <ResponsiveContainer width="100%" height={180}>
-          <BarChart data={equipeData} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-            <XAxis type="number" tick={{ fontSize: 12 }} />
-            <YAxis dataKey="name" type="category" width={90} tick={{ fontSize: 12 }} />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="chantiers" name="Chantiers" fill="#1e3a5f" radius={[0, 4, 4, 0]} />
-            <Bar dataKey="alertes" name="Alertes" fill="#e74c3c" radius={[0, 4, 4, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      {/* ── WhatsApp example ── */}
+      <section className="py-16 px-4 sm:px-6 bg-gray-50">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+              Un rapport en 30 secondes
+            </h2>
+            <p className="text-gray-500 leading-relaxed mb-6">
+              Le chef d'équipe n'a rien de nouveau à apprendre. Il envoie quelques lignes sur WhatsApp
+              comme il le ferait avec n'importe quel message. ChantierOps fait le reste.
+            </p>
+            <ul className="space-y-2">
+              {[
+                'Pas d'application à installer',
+                'Pas de compte à créer',
+                'Fonctionne sur tous les téléphones',
+                'Même hors connexion, le message part dès le réseau revenu',
+              ].map(item => (
+                <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Fake WhatsApp message bubble */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+              <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                <MessageSquare className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-gray-900">WhatsApp — Chef équipe</div>
+                <div className="text-xs text-gray-400">Carrelage · Résidence Les Cèdres</div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="bg-green-50 border border-green-100 rounded-xl rounded-tl-none px-4 py-3 max-w-xs">
+                <p className="text-sm text-gray-800 font-mono leading-relaxed">
+                  Avancement: 75%<br />
+                  HJ: 4<br />
+                  Travaux: pose carrelage R2<br />
+                  Problème: livraison en retard
+                </p>
+                <p className="text-xs text-gray-400 mt-1.5 text-right">17:02 ✓✓</p>
+              </div>
+              <div className="bg-blue-50 border border-blue-100 rounded-xl rounded-tr-none px-4 py-3 max-w-xs ml-auto text-right">
+                <p className="text-sm text-gray-800">
+                  ✅ Rapport enregistré pour Résidence Les Cèdres
+                </p>
+                <p className="text-xs text-gray-400 mt-1.5">17:02 · ChantierOps</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── About ── */}
+      <section className="py-16 px-4 sm:px-6" id="about">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center text-2xl font-bold text-white"
+            style={{ backgroundColor: '#1e3a5f' }}>
+            HM
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Pourquoi j'ai construit ChantierOps</h2>
+          <div className="text-gray-500 leading-relaxed space-y-4 text-left sm:text-center">
+            <p>
+              En travaillant dans le secteur de la construction au Luxembourg, j'ai vu de près le problème :
+              les directeurs de chantier passent leur temps au téléphone pour savoir ce qui se passe sur le terrain.
+              Les informations arrivent en retard, dispersées dans des messages WhatsApp, des appels, des emails.
+            </p>
+            <p>
+              J'ai voulu construire quelque chose de <strong className="text-gray-800">simple et réaliste</strong> —
+              pas un ERP de plus que personne n'utilise, mais un outil qui s'intègre dans ce que les équipes font
+              déjà : envoyer des messages WhatsApp.
+            </p>
+            <p>
+              ChantierOps est un projet portfolio full-stack que j'ai développé de A à Z :
+              architecture NestJS + Prisma côté backend, Next.js 14 côté frontend, déployé sur Railway,
+              intégration Twilio WhatsApp, génération PDF.
+            </p>
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-3 justify-center">
+            {['NestJS', 'Next.js 14', 'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Twilio', 'Railway', 'TypeScript'].map(tech => (
+              <span key={tech} className="px-3 py-1 rounded-full text-xs font-medium border border-gray-200 text-gray-600 bg-gray-50">
+                {tech}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-8 flex justify-center gap-4">
+            <a
+              href="https://github.com/Hugomelo123"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+            >
+              <Github className="w-4 h-4" />
+              GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="py-16 px-4 sm:px-6" style={{ backgroundColor: '#1e3a5f' }}>
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+            Voir ChantierOps en action
+          </h2>
+          <p className="text-blue-200 mb-8 leading-relaxed">
+            La démo est disponible en ligne avec des données réelles.
+            Aucune inscription requise.
+          </p>
+          <Link
+            href={DEMO_URL}
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-base font-semibold bg-white hover:bg-gray-100 transition"
+            style={{ color: '#1e3a5f' }}
+          >
+            Accéder au dashboard
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="py-6 px-4 sm:px-6 border-t border-gray-100">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded flex items-center justify-center" style={{ backgroundColor: '#1e3a5f' }}>
+              <HardHat className="w-3 h-3 text-white" />
+            </div>
+            <span>ChantierOps · Projet portfolio · Hugo Melo</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="https://github.com/Hugomelo123/-ChantierOps" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 transition">
+              GitHub
+            </a>
+            <Link href={DEMO_URL} className="hover:text-gray-600 transition">
+              Dashboard
+            </Link>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }
