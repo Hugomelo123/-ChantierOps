@@ -6,7 +6,7 @@
 
 ## Comment j'ai eu l'idée
 
-En travaillant dans le secteur de la construction au Luxembourg, j'ai observé quelque chose qui se répète sur tous les chantiers : le directeur de travaux ne sait jamais vraiment ce qui s'est passé dans la journée.
+En travaillant comme ajudante de carrelagem dans le secteur de la construction au Luxembourg, j'ai observé de près comment les directeurs de travaux gèrent leurs équipes au quotidien. Quelque chose se répète sur tous les chantiers : le directeur ne sait jamais vraiment ce qui s'est passé dans la journée.
 
 Il appelle. Le chef d'équipe répond "ça avance". Le directeur raccroche, note mentalement que "la Carrelage avance", et passe au prochain appel.
 
@@ -37,6 +37,12 @@ Pas dans une application spécialisée. Pas par email. Sur WhatsApp, comme avec 
 Alors j'ai décidé de partir de là. **Ne pas leur demander de changer leurs habitudes. Aller là où ils sont déjà.**
 
 L'idée : ils envoient un message WhatsApp en fin de journée, comme ils le feraient de toute façon. Le système reçoit ce message, le comprend, et met à jour un tableau de bord en temps réel pour le directeur.
+
+---
+
+## Note importante
+
+Ceci est une démonstration technique construite pour montrer comment je pense les problèmes opérationnels — pas un produit testé en conditions réelles. L'objectif est de montrer la réflexion opérationnelle et la capacité à structurer un flux avant de construire la solution.
 
 ---
 
@@ -86,14 +92,37 @@ C'est pour ça que WhatsApp était la bonne entrée. Et c'est pour ça que le ta
 
 ## Essayer
 
-La démo est accessible en ligne, avec des données réelles de démonstration, sans inscription.
+La démo est accessible en ligne, avec des données fictives réalistes, sans inscription.
+
+Cette démo est conçue pour être montrée lors d'une conversation — pas testée seule. L'objectif est de parcourir le flux ensemble et de discuter comment il s'adapte à l'opération réelle.
 
 **[Accéder au tableau de bord →](https://chantierops-production.up.railway.app/dashboard)**
 
 ---
 
+## Informations techniques
+
+La démo fonctionne avec une base de données de démonstration. Pour un déploiement réel en équipe, l'architecture est préparée pour connexion base de données multi-utilisateurs et authentification — non implémenté ici car l'objectif de cette version est de démontrer l'opération, pas l'infrastructure.
+
+**Stack :** React 19, TypeScript, Node.js, Express, PostgreSQL, Tailwind CSS, Twilio API (WhatsApp)
+
+---
+
+## À propos
+
+**Hugo Melo** — coordination opérationnelle et gestion de projets, avec focus sur le secteur de la construction au Luxembourg.
+
+J'ai construit cette démo pour montrer que je comprends les problèmes opérationnels réels d'une entreprise de construction — pas seulement la technologie, mais la réalité quotidienne des équipes terrain, des directeurs de travaux et de la communication client.
+
+Disponible pour des rôles en gestion d'opérations, coordination de chantiers, ou transformation digitale dans le secteur de la construction.
+
+- **GitHub :** github.com/Hugomelo123
+- **LinkedIn :** linkedin.com/in/hugomelo123
+
+---
+
 <details>
-<summary>Informations techniques</summary>
+<summary>Détails d'installation</summary>
 
 ### Architecture
 
