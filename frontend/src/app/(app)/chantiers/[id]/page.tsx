@@ -269,13 +269,15 @@ export default function ChantierDetail() {
           <div className="rounded-xl p-5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <h2 className="font-bold text-slate-100 mb-3">Informations</h2>
             <dl className="space-y-2 text-sm">
-              {[
-                ['Début', new Date(chantier.dateDebut).toLocaleDateString('fr-FR')],
-                chantier.dateFin ? ['Fin prévue', new Date(chantier.dateFin).toLocaleDateString('fr-FR')] : null,
-                ['Rapports', String(chantier._count?.rapports || 0)],
-                ['Demandes mat.', String(chantier._count?.demandesMat || 0)],
-              ].filter(Boolean).map(([label, value]) => (
-                <div key={label as string} className="flex justify-between">
+              {(
+                [
+                  ['Début', new Date(chantier.dateDebut).toLocaleDateString('fr-FR')],
+                  chantier.dateFin ? ['Fin prévue', new Date(chantier.dateFin).toLocaleDateString('fr-FR')] : null,
+                  ['Rapports', String(chantier._count?.rapports || 0)],
+                  ['Demandes mat.', String(chantier._count?.demandesMat || 0)],
+                ].filter(Boolean) as [string, string][]
+              ).map(([label, value]) => (
+                <div key={label} className="flex justify-between">
                   <dt className="text-slate-500">{label}</dt>
                   <dd className="font-semibold text-slate-200">{value}</dd>
                 </div>
