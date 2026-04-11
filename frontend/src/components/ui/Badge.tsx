@@ -7,13 +7,13 @@ interface BadgeProps {
 }
 
 const variants = {
-  ok: 'bg-green-100 text-green-800 border border-green-200',
-  alerte: 'bg-red-100 text-red-800 border border-red-200',
-  partiel: 'bg-yellow-100 text-yellow-800 border border-yellow-200',
-  normal: 'bg-green-100 text-green-800',
-  urgent: 'bg-orange-100 text-orange-800',
-  critique: 'bg-red-100 text-red-800',
-  default: 'bg-gray-100 text-gray-700',
+  ok:       'bg-green-500/15 text-green-400 border border-green-500/20',
+  alerte:   'bg-red-500/15 text-red-400 border border-red-500/20',
+  partiel:  'bg-yellow-500/15 text-yellow-400 border border-yellow-500/20',
+  normal:   'bg-green-500/15 text-green-400',
+  urgent:   'bg-orange-500/15 text-orange-400',
+  critique: 'bg-red-500/15 text-red-400',
+  default:  'bg-white/10 text-slate-300',
 };
 
 export default function Badge({ variant, children, className }: BadgeProps) {

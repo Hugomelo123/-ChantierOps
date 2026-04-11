@@ -34,19 +34,21 @@ export default function RapportsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Rapports</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{rapports?.length || 0} rapport(s)</p>
+          <h1 className="text-xl md:text-2xl font-bold text-slate-100">Rapports</h1>
+          <p className="text-sm text-slate-400 mt-0.5">{rapports?.length || 0} rapport(s)</p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
           <button
             onClick={() => downloadPdf('semaine')}
-            className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-colors"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
           >
             <Download className="w-4 h-4" /> <span className="hidden sm:inline">PDF </span>Semaine
           </button>
           <button
             onClick={() => downloadPdf('mois')}
-            className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-colors"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
           >
             <Download className="w-4 h-4" /> <span className="hidden sm:inline">PDF </span>Mois
           </button>
@@ -57,12 +59,13 @@ export default function RapportsPage() {
       <div className="flex flex-wrap gap-3">
         <input
           type="date"
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="dk-input"
+          style={{ width: 'auto' }}
           value={dateFilter}
           onChange={e => setDateFilter(e.target.value)}
         />
         <select
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="dk-select"
           value={equipeFilter}
           onChange={e => setEquipeFilter(e.target.value)}
         >
@@ -74,30 +77,34 @@ export default function RapportsPage() {
       {/* Rapports */}
       {isLoading ? (
         <div className="flex items-center justify-center h-48">
-          <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary-700 border-t-transparent" />
+          <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent" />
         </div>
       ) : rapports?.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-48 text-gray-400">
+        <div className="flex flex-col items-center justify-center h-48 text-slate-500">
           <FileText className="w-12 h-12 mb-3" />
           <p className="text-sm">Aucun rapport pour cette période</p>
         </div>
       ) : (
         <div className="space-y-3">
           {rapports?.map(r => (
-            <div key={r.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-5">
+            <div
+              key={r.id}
+              className="rounded-xl p-4 md:p-5"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
               <div className="flex items-start justify-between gap-2 mb-3">
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-gray-900 truncate">{r.chantier?.nom}</h3>
-                  <p className="text-xs text-gray-500 truncate">{r.chantier?.adresse}, {r.chantier?.ville}</p>
+                  <h3 className="font-semibold text-slate-100 truncate">{r.chantier?.nom}</h3>
+                  <p className="text-xs text-slate-500 truncate">{r.chantier?.adresse}, {r.chantier?.ville}</p>
                 </div>
                 <div className="flex flex-wrap gap-2 items-center justify-end flex-shrink-0">
                   {r.source === 'WHATSAPP' && (
-                    <span className="flex items-center gap-1 text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded">
+                    <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded" style={{ background: 'rgba(22,163,74,0.15)', color: '#4ade80' }}>
                       <MessageSquare className="w-3 h-3" /> WhatsApp
                     </span>
                   )}
                   {r.source === 'MANUEL' && (
-                    <span className="flex items-center gap-1 text-xs bg-gray-50 text-gray-600 px-2 py-0.5 rounded">
+                    <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded" style={{ background: 'rgba(255,255,255,0.07)', color: '#94a3b8' }}>
                       <User className="w-3 h-3" /> Manuel
                     </span>
                   )}
@@ -108,40 +115,40 @@ export default function RapportsPage() {
               </div>
 
               <div className="flex gap-4 mb-3">
-                <div className="flex-1 bg-gray-50 rounded-lg p-3">
+                <div className="flex-1 rounded-lg p-3" style={{ background: 'rgba(255,255,255,0.05)' }}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-gray-500">Avancement</span>
-                    <span className="text-sm font-semibold text-gray-900">{r.avancement}%</span>
+                    <span className="text-xs text-slate-500">Avancement</span>
+                    <span className="text-sm font-semibold text-slate-200">{r.avancement}%</span>
                   </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
                     <div
                       className="h-full rounded-full transition-all"
                       style={{
                         width: `${r.avancement}%`,
-                        backgroundColor: r.avancement >= 75 ? '#27ae60' : r.avancement >= 50 ? '#f39c12' : '#e74c3c',
+                        background: r.avancement >= 75 ? '#16a34a' : r.avancement >= 50 ? '#d97706' : '#dc2626',
                       }}
                     />
                   </div>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3 flex items-center gap-2">
-                  <User className="w-4 h-4 text-gray-400" />
+                <div className="rounded-lg p-3 flex items-center gap-2" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <User className="w-4 h-4 text-slate-500" />
                   <div>
-                    <div className="text-xs text-gray-500">H·Jour</div>
-                    <div className="text-sm font-semibold">{r.homesJour}</div>
+                    <div className="text-xs text-slate-500">H·Jour</div>
+                    <div className="text-sm font-semibold text-slate-200">{r.homesJour}</div>
                   </div>
                 </div>
               </div>
 
-              <p className="text-sm text-gray-700">{r.contenu}</p>
+              <p className="text-sm text-slate-300">{r.contenu}</p>
 
               {r.problemes && (
-                <div className="mt-2 flex items-start gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg">
+                <div className="mt-2 flex items-start gap-2 text-sm text-red-400 p-2 rounded-lg" style={{ background: 'rgba(220,38,38,0.1)' }}>
                   <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <p>{r.problemes}</p>
                 </div>
               )}
 
-              <p className="text-xs text-gray-400 mt-3">
+              <p className="text-xs text-slate-600 mt-3">
                 {new Date(r.date).toLocaleDateString('fr-FR', {
                   weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
                 })}

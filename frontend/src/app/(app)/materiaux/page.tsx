@@ -13,31 +13,24 @@ const EQUIPE_LABELS: Record<string, string> = {
   FACADE: 'Façade',
   ELECTRICITE: 'Électricité',
 };
-
 const STATUT_LABELS: Record<string, string> = {
   EN_ATTENTE: 'En attente',
   APPROUVE: 'Approuvé',
   LIVRE: 'Livré',
   REFUSE: 'Refusé',
 };
-
-const STATUT_COLORS: Record<string, string> = {
-  EN_ATTENTE: 'bg-yellow-100 text-yellow-800',
-  APPROUVE: 'bg-blue-100 text-blue-800',
-  LIVRE: 'bg-green-100 text-green-800',
-  REFUSE: 'bg-red-100 text-red-800',
+const STATUT_STYLES: Record<string, { bg: string; color: string }> = {
+  EN_ATTENTE: { bg: 'rgba(217,119,6,0.15)', color: '#fbbf24' },
+  APPROUVE:   { bg: 'rgba(37,99,235,0.15)', color: '#60a5fa' },
+  LIVRE:      { bg: 'rgba(22,163,74,0.15)',  color: '#4ade80' },
+  REFUSE:     { bg: 'rgba(107,114,128,0.15)',color: '#9ca3af' },
 };
 
 function CreateDemandeModal({ onClose }: { onClose: () => void }) {
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
-    chantierId: '',
-    equipe: 'CARRELAGE',
-    materiau: '',
-    quantite: 1,
-    unite: 'm²',
-    urgence: 'NORMAL',
-    notes: '',
+    chantierId: '', equipe: 'CARRELAGE', materiau: '',
+    quantite: 1, unite: 'm²', urgence: 'NORMAL', notes: '',
   });
 
   const { data: chantiers } = useQuery({
@@ -47,10 +40,7 @@ function CreateDemandeModal({ onClose }: { onClose: () => void }) {
 
   const mutation = useMutation({
     mutationFn: materiauxApi.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['materiaux'] });
-      onClose();
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['materiaux'] }); onClose(); },
   });
 
   const filteredChantiers = chantiers?.filter(c =>
@@ -58,83 +48,54 @@ function CreateDemandeModal({ onClose }: { onClose: () => void }) {
   ) || [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 p-6">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold text-gray-900">Demande de matériau</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div
+        className="w-full max-w-lg mx-4 rounded-xl"
+        style={{ background: '#1a2f4a', border: '1px solid rgba(255,255,255,0.12)' }}
+      >
+        <div className="flex items-center justify-between px-6 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <h2 className="text-base font-bold text-slate-100">Demande de matériau</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="px-6 py-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Équipe *</label>
-              <select
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                value={form.equipe}
-                onChange={e => setForm(f => ({ ...f, equipe: e.target.value, chantierId: '' }))}
-              >
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Équipe *</label>
+              <select className="dk-select w-full" value={form.equipe} onChange={e => setForm(f => ({ ...f, equipe: e.target.value, chantierId: '' }))}>
                 {EQUIPES.map(e => <option key={e} value={e}>{EQUIPE_LABELS[e]}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Chantier *</label>
-              <select
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                value={form.chantierId}
-                onChange={e => setForm(f => ({ ...f, chantierId: e.target.value }))}
-              >
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Chantier *</label>
+              <select className="dk-select w-full" value={form.chantierId} onChange={e => setForm(f => ({ ...f, chantierId: e.target.value }))}>
                 <option value="">Sélectionner...</option>
-                {filteredChantiers.map(c => (
-                  <option key={c.id} value={c.id}>{c.nom}</option>
-                ))}
+                {filteredChantiers.map(c => <option key={c.id} value={c.id}>{c.nom}</option>)}
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Matériau *</label>
-            <input
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-              value={form.materiau}
-              onChange={e => setForm(f => ({ ...f, materiau: e.target.value }))}
-              placeholder="Ex: Carrelage grès cérame 60x60"
-            />
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Matériau *</label>
+            <input className="dk-input" value={form.materiau} onChange={e => setForm(f => ({ ...f, materiau: e.target.value }))} placeholder="Ex: Carrelage grès cérame 60x60" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Quantité *</label>
-              <input
-                type="number"
-                min="0"
-                step="0.5"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                value={form.quantite}
-                onChange={e => setForm(f => ({ ...f, quantite: +e.target.value }))}
-              />
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Quantité *</label>
+              <input type="number" min="0" step="0.5" className="dk-input" value={form.quantite} onChange={e => setForm(f => ({ ...f, quantite: +e.target.value }))} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Unité *</label>
-              <select
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                value={form.unite}
-                onChange={e => setForm(f => ({ ...f, unite: e.target.value }))}
-              >
-                {['m²', 'm³', 'ml', 'kg', 't', 'pcs', 'sacs', 'boîtes', 'palettes'].map(u => (
-                  <option key={u} value={u}>{u}</option>
-                ))}
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Unité *</label>
+              <select className="dk-select w-full" value={form.unite} onChange={e => setForm(f => ({ ...f, unite: e.target.value }))}>
+                {['m²', 'm³', 'ml', 'kg', 't', 'pcs', 'sacs', 'boîtes', 'palettes'].map(u => <option key={u} value={u}>{u}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Urgence</label>
-              <select
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                value={form.urgence}
-                onChange={e => setForm(f => ({ ...f, urgence: e.target.value }))}
-              >
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Urgence</label>
+              <select className="dk-select w-full" value={form.urgence} onChange={e => setForm(f => ({ ...f, urgence: e.target.value }))}>
                 <option value="NORMAL">Normal</option>
                 <option value="URGENT">Urgent</option>
                 <option value="CRITIQUE">Critique</option>
@@ -143,9 +104,9 @@ function CreateDemandeModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Notes</label>
             <textarea
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              className="dk-input resize-none"
               rows={2}
               value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
@@ -154,14 +115,19 @@ function CreateDemandeModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <div className="flex gap-3 mt-6">
-          <button onClick={onClose} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <div className="flex gap-3 px-6 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+          <button
+            onClick={onClose}
+            className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white transition-colors"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
             Annuler
           </button>
           <button
             onClick={() => mutation.mutate(form)}
             disabled={!form.materiau || !form.chantierId || mutation.isPending}
-            className="flex-1 px-4 py-2 bg-primary-700 text-white rounded-lg text-sm font-medium hover:bg-primary-800 disabled:opacity-50"
+            className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white disabled:opacity-50 transition-colors"
+            style={{ background: '#2563eb' }}
           >
             {mutation.isPending ? 'Création...' : 'Créer la demande'}
           </button>
@@ -195,8 +161,7 @@ export default function MateriauxPage() {
   });
 
   const statutMutation = useMutation({
-    mutationFn: ({ id, statut }: { id: string; statut: string }) =>
-      materiauxApi.updateStatut(id, statut),
+    mutationFn: ({ id, statut }: { id: string; statut: string }) => materiauxApi.updateStatut(id, statut),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['materiaux'] });
       if (variables.statut === 'APPROUVE') {
@@ -216,15 +181,15 @@ export default function MateriauxPage() {
     <div className="p-4 md:p-6 space-y-4 md:space-y-5">
       {showCreate && <CreateDemandeModal onClose={() => setShowCreate(false)} />}
 
-      {/* Toast WhatsApp confirmation */}
+      {/* Toast */}
       {toast && (
-        <div className="fixed top-4 right-4 z-50 flex items-center gap-3 bg-green-600 text-white px-4 py-3 rounded-xl shadow-lg animate-in slide-in-from-top-2">
+        <div className="fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg animate-fadeup" style={{ background: '#16a34a', color: '#fff' }}>
           <CheckCircle className="w-5 h-5 flex-shrink-0" />
           <div>
             <p className="text-sm font-semibold">Demande approuvée</p>
-            <p className="text-xs text-green-100">WhatsApp envoyé à l'équipe · {toast.materiau}</p>
+            <p className="text-xs opacity-80">WhatsApp envoyé · {toast.materiau}</p>
           </div>
-          <button onClick={() => setToast(null)} className="ml-2 text-green-200 hover:text-white">
+          <button onClick={() => setToast(null)} className="ml-2 opacity-70 hover:opacity-100">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -233,31 +198,27 @@ export default function MateriauxPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Matériaux</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{demandes?.length || 0} demande(s)</p>
+          <h1 className="text-xl md:text-2xl font-bold text-slate-100">Matériaux</h1>
+          <p className="text-sm text-slate-400 mt-0.5">{demandes?.length || 0} demande(s)</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => downloadPdf('semaine')}
-            className="flex items-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
-          >
-            <Download className="w-4 h-4" /> <span className="hidden sm:inline">PDF </span>Semaine
-          </button>
-          <button
-            onClick={() => downloadPdf('mois')}
-            className="flex items-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
-          >
-            <Download className="w-4 h-4" /> <span className="hidden sm:inline">PDF </span>Mois
-          </button>
-          <button
-            onClick={() => downloadPdf('chantier')}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+          {(['semaine', 'mois'] as const).map(t => (
+            <button key={t} onClick={() => downloadPdf(t)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white transition-colors"
+              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              <Download className="w-4 h-4" /> <span className="hidden sm:inline">PDF </span>{t === 'semaine' ? 'Semaine' : 'Mois'}
+            </button>
+          ))}
+          <button onClick={() => downloadPdf('chantier')}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white transition-colors"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
           >
             <Building2 className="w-4 h-4" /> PDF Chantier
           </button>
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-1.5 px-4 py-2 bg-primary-700 text-white rounded-lg text-sm font-medium hover:bg-primary-800"
+          <button onClick={() => setShowCreate(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors"
+            style={{ background: '#2563eb' }}
           >
             <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Nouvelle </span>Demande
           </button>
@@ -266,27 +227,15 @@ export default function MateriauxPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
-        <select
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
-          value={equipeFilter}
-          onChange={e => setEquipeFilter(e.target.value)}
-        >
+        <select className="dk-select" value={equipeFilter} onChange={e => setEquipeFilter(e.target.value)}>
           <option value="">Toutes les équipes</option>
           {EQUIPES.map(e => <option key={e} value={e}>{EQUIPE_LABELS[e]}</option>)}
         </select>
-        <select
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
-          value={statutFilter}
-          onChange={e => setStatutFilter(e.target.value)}
-        >
+        <select className="dk-select" value={statutFilter} onChange={e => setStatutFilter(e.target.value)}>
           <option value="">Tous les statuts</option>
           {Object.entries(STATUT_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
-        <select
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
-          value={urgenceFilter}
-          onChange={e => setUrgenceFilter(e.target.value)}
-        >
+        <select className="dk-select" value={urgenceFilter} onChange={e => setUrgenceFilter(e.target.value)}>
           <option value="">Toutes urgences</option>
           <option value="CRITIQUE">Critique</option>
           <option value="URGENT">Urgent</option>
@@ -297,75 +246,83 @@ export default function MateriauxPage() {
       {/* Table */}
       {isLoading ? (
         <div className="flex items-center justify-center h-48">
-          <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary-700 border-t-transparent" />
+          <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent" />
         </div>
       ) : demandes?.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-48 text-gray-400">
+        <div className="flex flex-col items-center justify-center h-48 text-slate-500">
           <Package className="w-12 h-12 mb-3" />
           <p className="text-sm">Aucune demande de matériau</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px]">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Matériau</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Chantier</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Équipe</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Qté</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Urgence</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Statut</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Date</th>
-                <th className="px-5 py-3"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {demandes?.map(d => (
-                <tr key={d.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-5 py-4">
-                    <div className="font-medium text-sm text-gray-900">{d.materiau}</div>
-                    {d.notes && <div className="text-xs text-gray-400 mt-0.5 truncate max-w-48">{d.notes}</div>}
-                  </td>
-                  <td className="px-5 py-4 text-sm text-gray-600">
-                    {d.chantier?.nom}
-                    <div className="text-xs text-gray-400">{d.chantier?.ville}</div>
-                  </td>
-                  <td className="px-5 py-4">
-                    <Badge variant="default" className="text-xs">{EQUIPE_LABELS[d.equipe]}</Badge>
-                  </td>
-                  <td className="px-5 py-4 text-sm text-gray-700 font-medium">
-                    {d.quantite} {d.unite}
-                  </td>
-                  <td className="px-5 py-4">
-                    <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${
-                      d.urgence === 'CRITIQUE' ? 'bg-red-100 text-red-800' :
-                      d.urgence === 'URGENT' ? 'bg-orange-100 text-orange-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
-                      {d.urgence === 'CRITIQUE' && <AlertTriangle className="w-3 h-3" />}
-                      {d.urgence}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4">
-                    <select
-                      className={`text-xs font-semibold px-2 py-1 rounded-lg border-0 cursor-pointer ${STATUT_COLORS[d.statut]}`}
-                      value={d.statut}
-                      onChange={e => statutMutation.mutate({ id: d.id, statut: e.target.value })}
-                    >
-                      {Object.entries(STATUT_LABELS).map(([k, v]) => (
-                        <option key={k} value={k}>{v}</option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-5 py-4 text-xs text-gray-400">
-                    {new Date(d.demandeLe).toLocaleDateString('fr-FR')}
-                  </td>
-                  <td className="px-5 py-4" />
+            <table className="w-full" style={{ minWidth: '640px' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                  {['Matériau', 'Chantier', 'Équipe', 'Qté', 'Urgence', 'Statut', 'Date', ''].map(h => (
+                    <th key={h} className="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-600" style={{ fontFamily: 'monospace' }}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {demandes?.map(d => {
+                  const sc = STATUT_STYLES[d.statut] || STATUT_STYLES.EN_ATTENTE;
+                  return (
+                    <tr
+                      key={d.id}
+                      className="transition-colors"
+                      style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                    >
+                      <td className="px-5 py-4">
+                        <div className="text-sm font-semibold text-slate-200">{d.materiau}</div>
+                        {d.notes && <div className="text-xs text-slate-500 mt-0.5 truncate max-w-[180px]">{d.notes}</div>}
+                      </td>
+                      <td className="px-5 py-4 text-sm text-slate-400">
+                        {d.chantier?.nom}
+                        <div className="text-xs text-slate-600">{d.chantier?.ville}</div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <Badge variant="default">{EQUIPE_LABELS[d.equipe]}</Badge>
+                      </td>
+                      <td className="px-5 py-4 text-sm text-slate-300 font-semibold" style={{ fontFamily: 'monospace' }}>
+                        {d.quantite} {d.unite}
+                      </td>
+                      <td className="px-5 py-4">
+                        <span
+                          className="inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded"
+                          style={
+                            d.urgence === 'CRITIQUE' ? { background: 'rgba(220,38,38,0.15)', color: '#f87171' } :
+                            d.urgence === 'URGENT'   ? { background: 'rgba(234,88,12,0.15)',  color: '#fb923c' } :
+                                                       { background: 'rgba(22,163,74,0.15)',   color: '#4ade80' }
+                          }
+                        >
+                          {d.urgence === 'CRITIQUE' && <AlertTriangle className="w-3 h-3" />}
+                          {d.urgence}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <select
+                          className="text-xs font-bold px-2 py-1 rounded cursor-pointer border-0 outline-none"
+                          style={{ background: sc.bg, color: sc.color, fontFamily: 'monospace' }}
+                          value={d.statut}
+                          onChange={e => statutMutation.mutate({ id: d.id, statut: e.target.value })}
+                        >
+                          {Object.entries(STATUT_LABELS).map(([k, v]) => (
+                            <option key={k} value={k} style={{ background: '#1a2f4a', color: '#f1f5f9' }}>{v}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-5 py-4 text-xs text-slate-500" style={{ fontFamily: 'monospace' }}>
+                        {new Date(d.demandeLe).toLocaleDateString('fr-FR')}
+                      </td>
+                      <td className="px-5 py-4" />
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
       )}

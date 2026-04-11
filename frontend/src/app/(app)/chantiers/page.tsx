@@ -7,17 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { chantiersApi, equipesApi, type Chantier, type ConfigEquipe, type Equipe } from '@/lib/api';
 import Badge from '@/components/ui/Badge';
 import { useSearchParams, useRouter } from 'next/navigation';
-import {
-  Building2,
-  Plus,
-  Search,
-  MapPin,
-  Calendar,
-  Users,
-  AlertTriangle,
-  ChevronRight,
-  X,
-} from 'lucide-react';
+import { Building2, Plus, Search, MapPin, Calendar, Users, AlertTriangle, ChevronRight, X } from 'lucide-react';
 
 const EQUIPES: Equipe[] = ['CARRELAGE', 'MACONNERIE', 'FACADE', 'ELECTRICITE'];
 const EQUIPE_LABELS: Record<string, string> = {
@@ -26,11 +16,11 @@ const EQUIPE_LABELS: Record<string, string> = {
   FACADE: 'Façade',
   ELECTRICITE: 'Électricité',
 };
-const EQUIPE_COLORS: Record<string, string> = {
-  CARRELAGE: 'bg-blue-50 text-blue-700',
-  MACONNERIE: 'bg-orange-50 text-orange-700',
-  FACADE: 'bg-green-50 text-green-700',
-  ELECTRICITE: 'bg-yellow-50 text-yellow-700',
+const EQUIPE_COLORS: Record<string, { bg: string; color: string }> = {
+  CARRELAGE:   { bg: 'rgba(59,130,246,0.15)', color: '#60a5fa' },
+  MACONNERIE:  { bg: 'rgba(217,119,6,0.15)',  color: '#fbbf24' },
+  FACADE:      { bg: 'rgba(22,163,74,0.15)',   color: '#4ade80' },
+  ELECTRICITE: { bg: 'rgba(124,58,237,0.15)',  color: '#a78bfa' },
 };
 
 function CreateChantierModal({ onClose }: { onClose: () => void }) {
@@ -41,30 +31,21 @@ function CreateChantierModal({ onClose }: { onClose: () => void }) {
   });
 
   const [form, setForm] = useState({
-    nom: '',
-    adresse: '',
-    ville: '',
-    codePostal: '',
+    nom: '', adresse: '', ville: '', codePostal: '',
     dateDebut: new Date().toISOString().split('T')[0],
-    notes: '',
-    teamIds: [] as string[],
+    notes: '', teamIds: [] as string[],
   });
 
   const toggleTeam = (id: string) => {
     setForm(f => ({
       ...f,
-      teamIds: f.teamIds.includes(id)
-        ? f.teamIds.filter(t => t !== id)
-        : [...f.teamIds, id],
+      teamIds: f.teamIds.includes(id) ? f.teamIds.filter(t => t !== id) : [...f.teamIds, id],
     }));
   };
 
   const mutation = useMutation({
     mutationFn: chantiersApi.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chantiers'] });
-      onClose();
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['chantiers'] }); onClose(); },
   });
 
   const byType = EQUIPES.reduce((acc, type) => {
@@ -73,93 +54,66 @@ function CreateChantierModal({ onClose }: { onClose: () => void }) {
   }, {} as Record<Equipe, ConfigEquipe[]>);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold text-gray-900">Nouveau chantier</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div
+        className="w-full max-w-lg mx-4 rounded-xl max-h-[90vh] overflow-y-auto"
+        style={{ background: '#1a2f4a', border: '1px solid rgba(255,255,255,0.12)' }}
+      >
+        <div className="flex items-center justify-between px-6 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <h2 className="text-base font-bold text-slate-100">Nouveau chantier</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="px-6 py-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du chantier *</label>
-            <input
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              value={form.nom}
-              onChange={e => setForm(f => ({ ...f, nom: e.target.value }))}
-              placeholder="Ex: Résidence Les Cèdres"
-            />
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Nom du chantier *</label>
+            <input className="dk-input" value={form.nom} onChange={e => setForm(f => ({ ...f, nom: e.target.value }))} placeholder="Ex: Résidence Les Cèdres" />
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse *</label>
-            <input
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              value={form.adresse}
-              onChange={e => setForm(f => ({ ...f, adresse: e.target.value }))}
-              placeholder="12 Rue de la Paix"
-            />
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Adresse *</label>
+            <input className="dk-input" value={form.adresse} onChange={e => setForm(f => ({ ...f, adresse: e.target.value }))} placeholder="12 Rue de la Paix" />
           </div>
-
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ville *</label>
-              <input
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                value={form.ville}
-                onChange={e => setForm(f => ({ ...f, ville: e.target.value }))}
-                placeholder="Luxembourg"
-              />
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Ville *</label>
+              <input className="dk-input" value={form.ville} onChange={e => setForm(f => ({ ...f, ville: e.target.value }))} placeholder="Luxembourg" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Code postal *</label>
-              <input
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                value={form.codePostal}
-                onChange={e => setForm(f => ({ ...f, codePostal: e.target.value }))}
-                placeholder="L-1234"
-              />
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Code postal *</label>
+              <input className="dk-input" value={form.codePostal} onChange={e => setForm(f => ({ ...f, codePostal: e.target.value }))} placeholder="L-1234" />
             </div>
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Date début *</label>
-            <input
-              type="date"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              value={form.dateDebut}
-              onChange={e => setForm(f => ({ ...f, dateDebut: e.target.value }))}
-            />
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Date début *</label>
+            <input type="date" className="dk-input" value={form.dateDebut} onChange={e => setForm(f => ({ ...f, dateDebut: e.target.value }))} />
           </div>
-
-          {/* Multi-select equipes grouped by type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Équipes assignées
-              {form.teamIds.length > 0 && (
-                <span className="ml-2 text-xs text-primary-600 font-normal">{form.teamIds.length} sélectionnée(s)</span>
-              )}
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">
+              Équipes assignées {form.teamIds.length > 0 && <span className="text-blue-400 ml-1">{form.teamIds.length} sélectionnée(s)</span>}
             </label>
-            <div className="space-y-2 border border-gray-200 rounded-lg p-3 bg-gray-50 max-h-52 overflow-y-auto">
+            <div
+              className="rounded-lg p-3 space-y-2 max-h-52 overflow-y-auto"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
               {EQUIPES.map(type => {
                 const teams = byType[type];
                 if (teams.length === 0) return null;
                 return (
                   <div key={type}>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{EQUIPE_LABELS[type]}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600 mb-1" style={{ fontFamily: 'monospace' }}>{EQUIPE_LABELS[type]}</p>
                     <div className="space-y-1 pl-2">
                       {teams.map(eq => (
-                        <label key={eq.id} className="flex items-center gap-2 cursor-pointer group">
+                        <label key={eq.id} className="flex items-center gap-2 cursor-pointer">
                           <input
                             type="checkbox"
                             checked={form.teamIds.includes(eq.id)}
                             onChange={() => toggleTeam(eq.id)}
-                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                            className="rounded"
                           />
-                          <span className="text-sm text-gray-700 group-hover:text-gray-900">{eq.nom}</span>
-                          <span className="text-xs text-gray-400">{eq.chefNom}</span>
+                          <span className="text-sm text-slate-300">{eq.nom}</span>
+                          <span className="text-xs text-slate-500">{eq.chefNom}</span>
                         </label>
                       ))}
                     </div>
@@ -167,15 +121,14 @@ function CreateChantierModal({ onClose }: { onClose: () => void }) {
                 );
               })}
               {allEquipes.length === 0 && (
-                <p className="text-xs text-gray-400 italic">Aucune équipe configurée — allez dans Paramètres d'abord</p>
+                <p className="text-xs text-slate-500 italic">Aucune équipe configurée — allez dans Paramètres d'abord</p>
               )}
             </div>
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Notes</label>
             <textarea
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="dk-input resize-none"
               rows={2}
               value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
@@ -184,14 +137,18 @@ function CreateChantierModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <div className="flex gap-3 mt-6">
-          <button onClick={onClose} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <div className="flex gap-3 px-6 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+          <button onClick={onClose}
+            className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white transition-colors"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
             Annuler
           </button>
           <button
             onClick={() => mutation.mutate(form)}
             disabled={!form.nom || !form.adresse || !form.ville || mutation.isPending}
-            className="flex-1 px-4 py-2 bg-primary-700 text-white rounded-lg text-sm font-medium hover:bg-primary-800 disabled:opacity-50"
+            className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white disabled:opacity-50"
+            style={{ background: '#2563eb' }}
           >
             {mutation.isPending ? 'Création...' : 'Créer le chantier'}
           </button>
@@ -229,12 +186,13 @@ function ChantiersContent() {
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Chantiers</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{filtered.length} chantier(s)</p>
+          <h1 className="text-xl md:text-2xl font-bold text-slate-100">Chantiers</h1>
+          <p className="text-sm text-slate-400 mt-0.5">{filtered.length} chantier(s)</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-3 md:px-4 py-2 bg-primary-700 text-white rounded-lg text-sm font-medium hover:bg-primary-800 flex-shrink-0"
+          className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg text-sm font-semibold text-white flex-shrink-0 transition-colors"
+          style={{ background: '#2563eb' }}
         >
           <Plus className="w-4 h-4" />
           <span className="hidden sm:inline">Nouveau chantier</span>
@@ -245,27 +203,19 @@ function ChantiersContent() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-48">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input
-            className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="dk-input pl-9"
             placeholder="Rechercher un chantier..."
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
-        <select
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          value={equipeFilter}
-          onChange={e => setEquipeFilter(e.target.value)}
-        >
+        <select className="dk-select" value={equipeFilter} onChange={e => setEquipeFilter(e.target.value)}>
           <option value="">Toutes les équipes</option>
           {EQUIPES.map(e => <option key={e} value={e}>{EQUIPE_LABELS[e]}</option>)}
         </select>
-        <select
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)}
-        >
+        <select className="dk-select" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
           <option value="">Tous les statuts</option>
           <option value="OK">OK</option>
           <option value="ALERTE">Alerte</option>
@@ -273,24 +223,20 @@ function ChantiersContent() {
         </select>
       </div>
 
-      {/* Chantiers grid */}
+      {/* Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center h-48">
-          <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary-700 border-t-transparent" />
+          <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-48 text-gray-400">
+        <div className="flex flex-col items-center justify-center h-48 text-slate-500">
           <Building2 className="w-12 h-12 mb-3" />
           <p className="text-sm">Aucun chantier trouvé</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filtered.map((chantier) => (
-            <ChantierCard
-              key={chantier.id}
-              chantier={chantier}
-              onClick={() => router.push(`/chantiers/${chantier.id}`)}
-            />
+          {filtered.map(chantier => (
+            <ChantierCard key={chantier.id} chantier={chantier} onClick={() => router.push(`/chantiers/${chantier.id}`)} />
           ))}
         </div>
       )}
@@ -300,7 +246,7 @@ function ChantiersContent() {
 
 export default function ChantiersPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-full"><div className="animate-spin rounded-full h-8 w-8 border-4 border-primary-700 border-t-transparent" /></div>}>
+    <Suspense fallback={<div className="flex items-center justify-center h-full"><div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent" /></div>}>
       <ChantiersContent />
     </Suspense>
   );
@@ -310,8 +256,6 @@ function ChantierCard({ chantier, onClick }: { chantier: Chantier; onClick: () =
   const lastRapport = chantier.rapports?.[0];
   const alertesCount = chantier.alertes?.filter(a => !a.resolue).length || chantier._count?.alertes || 0;
   const equipes = chantier.equipes || [];
-
-  // Deduplicate by type for display
   const typesSeen = new Set<string>();
   const uniqueTypes = equipes.filter(e => {
     if (typesSeen.has(e.configEquipe.type)) return false;
@@ -319,45 +263,63 @@ function ChantierCard({ chantier, onClick }: { chantier: Chantier; onClick: () =
     return true;
   });
 
+  const statusStyles: Record<string, { bg: string; color: string; border: string }> = {
+    OK:      { bg: 'rgba(22,163,74,0.12)',   color: '#4ade80', border: 'rgba(74,222,128,0.2)' },
+    ALERTE:  { bg: 'rgba(220,38,38,0.1)',    color: '#f87171', border: 'rgba(248,113,113,0.2)' },
+    PARTIEL: { bg: 'rgba(217,119,6,0.1)',    color: '#fbbf24', border: 'rgba(251,191,36,0.2)' },
+  };
+  const ss = statusStyles[chantier.status] || statusStyles.OK;
+
   return (
     <div
       onClick={onClick}
-      className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 cursor-pointer hover:shadow-md hover:border-primary-200 transition-all"
+      className="rounded-xl p-5 cursor-pointer transition-all"
+      style={{
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = 'rgba(255,255,255,0.07)';
+        e.currentTarget.style.border = '1px solid rgba(255,255,255,0.14)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+        e.currentTarget.style.border = '1px solid rgba(255,255,255,0.08)';
+      }}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 truncate">{chantier.nom}</h3>
+          <h3 className="font-bold text-slate-100 truncate">{chantier.nom}</h3>
           <div className="flex items-center gap-1 mt-0.5">
-            <MapPin className="w-3 h-3 text-gray-400 flex-shrink-0" />
-            <p className="text-xs text-gray-500 truncate">{chantier.adresse}, {chantier.ville}</p>
+            <MapPin className="w-3 h-3 text-slate-500 flex-shrink-0" />
+            <p className="text-xs text-slate-500 truncate">{chantier.adresse}, {chantier.ville}</p>
           </div>
         </div>
-        <Badge variant={chantier.status.toLowerCase() as any} className="ml-2 flex-shrink-0">
+        <span
+          className="text-xs font-bold px-2 py-0.5 rounded-full ml-2 flex-shrink-0"
+          style={{ background: ss.bg, color: ss.color, border: `1px solid ${ss.border}` }}
+        >
           {chantier.status}
-        </Badge>
+        </span>
       </div>
 
-      <div className="flex items-center flex-wrap gap-1.5 mb-3">
-        {uniqueTypes.map(e => (
-          <span
-            key={e.configEquipe.type}
-            className={`px-2 py-0.5 rounded-full text-xs font-medium ${EQUIPE_COLORS[e.configEquipe.type]}`}
-          >
-            {EQUIPE_LABELS[e.configEquipe.type]}
-          </span>
-        ))}
-        {equipes.length > uniqueTypes.length && (
-          <span className="text-xs text-gray-400">+{equipes.length - uniqueTypes.length} équipe(s)</span>
-        )}
+      <div className="flex flex-wrap gap-1.5 mb-3">
+        {uniqueTypes.map(e => {
+          const ec = EQUIPE_COLORS[e.configEquipe.type];
+          return (
+            <span key={e.configEquipe.type} className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: ec.bg, color: ec.color }}>
+              {EQUIPE_LABELS[e.configEquipe.type]}
+            </span>
+          );
+        })}
         {alertesCount > 0 && (
-          <span className="flex items-center gap-1 text-xs text-red-600 font-medium ml-auto">
-            <AlertTriangle className="w-3 h-3" />
-            {alertesCount} alerte{alertesCount > 1 ? 's' : ''}
+          <span className="flex items-center gap-1 text-xs font-semibold ml-auto" style={{ color: '#f87171' }}>
+            <AlertTriangle className="w-3 h-3" /> {alertesCount} alerte{alertesCount > 1 ? 's' : ''}
           </span>
         )}
       </div>
 
-      <div className="border-t border-gray-50 pt-3 mt-3 flex items-center justify-between text-xs text-gray-500">
+      <div className="flex items-center justify-between text-xs text-slate-600 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="flex items-center gap-1">
           <Calendar className="w-3 h-3" />
           {new Date(chantier.dateDebut).toLocaleDateString('fr-FR')}
@@ -368,7 +330,7 @@ function ChantierCard({ chantier, onClick }: { chantier: Chantier; onClick: () =
             <span>{lastRapport.avancement}%</span>
           </div>
         )}
-        <ChevronRight className="w-4 h-4 text-gray-300" />
+        <ChevronRight className="w-4 h-4 text-slate-700" />
       </div>
     </div>
   );
