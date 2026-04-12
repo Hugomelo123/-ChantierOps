@@ -21,8 +21,7 @@ export class WhatsappController {
     @Body('equipe') equipe: string,
     @Body('message') message: string,
   ) {
-    const ok = await this.whatsappService.envoyerInstructionEquipe(equipe, message);
-    return { success: ok };
+    return this.whatsappService.envoyerInstructionEquipe(equipe, message);
   }
 
   // Envoyer message direct

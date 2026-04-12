@@ -40,8 +40,8 @@ export class MateriauxService {
 
     // Notify team via WhatsApp when request is approved
     if (statut === 'APPROUVE') {
-      const config = await this.prisma.configEquipe.findUnique({
-        where: { equipe: demande.equipe as any },
+      const config = await this.prisma.configEquipe.findFirst({
+        where: { type: demande.equipe as any, actif: true },
       });
       if (config) {
         const urgenceLabel = demande.urgence === 'CRITIQUE' ? '🚨 CRITIQUE' : demande.urgence === 'URGENT' ? '⚡ URGENT' : '✅ Normal';

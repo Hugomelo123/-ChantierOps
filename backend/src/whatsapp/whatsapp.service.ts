@@ -128,7 +128,7 @@ export class WhatsappService {
 
     for (const ligne of lignes) {
       const matchAv   = ligne.match(/avancement[:\s]+(\d+)/i);
-      const matchHJ   = ligne.match(/(?:hj|hommes|hommes.jour)[:\s]+(\d+)/i);
+      const matchHJ   = ligne.match(/(?:hj|hommes[.\s]?jour|hommes)[:\s]+(\d+)/i);
       const matchProb = ligne.match(/(?:probl[eè]me|urgent|alerte)[:\s]+(.+)/i);
       if (matchAv)   avancement = Math.min(parseInt(matchAv[1]), 100);
       if (matchHJ)   homesJour  = parseInt(matchHJ[1]);
