@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   dashboardApi, chantiersApi, materiauxApi, alertesApi, whatsappApi,
@@ -149,17 +149,35 @@ function WaFeedPanel({ feed, onSimulate, instrEquipe, instrMsg, setInstrEquipe, 
   onSend: () => void;
   toast: string | null;
 }) {
+  const feedRef = useRef<HTMLDivElement>(null);
+  const [simulating, setSimulating] = useState(false);
+
+  useEffect(() => {
+    if (feedRef.current) feedRef.current.scrollTop = 0;
+  }, [feed]);
+
+  const handleSimulate = () => {
+    setSimulating(true);
+    onSimulate();
+    setTimeout(() => setSimulating(false), 600);
+  };
+
   return (
     <div className="rounded-xl flex flex-col overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
       {/* Panel header */}
       <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
         <span className="text-sm font-bold text-slate-100">Rapports WhatsApp</span>
         <button
-          onClick={onSimulate}
-          className="flex items-center gap-1.5 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors px-2 py-1 rounded"
-          style={{ background: 'rgba(37,99,235,0.1)', border: '1px solid rgba(37,99,235,0.2)' }}
+          onClick={handleSimulate}
+          disabled={simulating}
+          className="flex items-center gap-1.5 text-xs font-bold transition-all px-2 py-1 rounded"
+          style={{
+            background: simulating ? 'rgba(22,163,74,0.2)' : 'rgba(37,99,235,0.1)',
+            border: simulating ? '1px solid rgba(74,222,128,0.3)' : '1px solid rgba(37,99,235,0.2)',
+            color: simulating ? '#4ade80' : '#60a5fa',
+          }}
         >
-          <Zap className="w-3 h-3" /> Simuler
+          <Zap className="w-3 h-3" /> {simulating ? 'Reçu ✓' : 'Simuler'}
         </button>
       </div>
 
@@ -171,7 +189,7 @@ function WaFeedPanel({ feed, onSimulate, instrEquipe, instrMsg, setInstrEquipe, 
       )}
 
       {/* Feed */}
-      <div className="flex-1 overflow-y-auto" style={{ maxHeight: '260px' }}>
+      <div ref={feedRef} className="flex-1 overflow-y-auto" style={{ maxHeight: '260px' }}>
         {feed.map(m => (
           <div key={m.id} className="px-4 py-3 animate-fadeup" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="flex items-center gap-2.5 mb-1.5">
@@ -404,7 +422,7 @@ function RapportsTable({ materiaux }: { materiaux: DemandeMateriau[] }) {
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'equipes' | 'rapports'>('equipes');
   const [waFeed, setWaFeed] = useState<WaMsg[]>(WA_INITIAL);
-  const [waIdx, setWaIdx] = useState(0);
+  const waIdxRef = useRef(0);
   const [instrEquipe, setInstrEquipe] = useState('CARRELAGE');
   const [instrMsg, setInstrMsg] = useState('');
   const [toast, setToast] = useState<string | null>(null);
@@ -449,9 +467,10 @@ export default function Dashboard() {
   };
 
   const simWA = () => {
-    const m = { ...WA_POOL[waIdx % WA_POOL.length], id: `sim-${Date.now()}`, time: 'maintenant' };
+    const idx = waIdxRef.current;
+    waIdxRef.current = (idx + 1) % WA_POOL.length;
+    const m = { ...WA_POOL[idx], id: `sim-${Date.now()}`, time: 'maintenant' };
     setWaFeed(prev => [m, ...prev]);
-    setWaIdx(i => i + 1);
     showToast(`Rapport reçu — ${m.who} · ${m.where.split('·')[1]?.trim()}`);
   };
 
