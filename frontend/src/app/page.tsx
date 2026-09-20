@@ -8,30 +8,29 @@ const DEMO_URL = '/dashboard';
 export default function LandingPage() {
   return (
     <div className="min-h-screen text-slate-100" style={{
-      background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37,99,235,0.18) 0%, transparent 60%), #080f1a',
+      background: 'radial-gradient(ellipse 80% 50% at 50% -5%, rgba(245,158,11,0.12) 0%, transparent 60%), #09080a',
       fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif",
     }}>
 
       {/* Top notice */}
-      <div className="w-full text-center py-2.5 px-4 text-xs font-semibold tracking-widest uppercase" style={{
-        background: 'rgba(251,191,36,0.08)',
-        borderBottom: '1px solid rgba(251,191,36,0.15)',
-        color: '#fbbf24',
-        letterSpacing: '0.08em',
+      <div className="w-full text-center py-2.5 px-4 text-xs font-semibold uppercase tracking-widest" style={{
+        background: 'rgba(245,158,11,0.07)',
+        borderBottom: '1px solid rgba(245,158,11,0.15)',
+        color: '#f59e0b',
       }}>
         Démonstration de méthode — pas un produit commercial
       </div>
 
       {/* Nav */}
       <nav className="sticky top-0 z-50 backdrop-blur-xl" style={{
-        background: 'rgba(8,15,26,0.85)',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(9,8,10,0.88)',
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
       }}>
         <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{
-              background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
-              boxShadow: '0 0 20px rgba(37,99,235,0.4)',
+              background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
+              boxShadow: '0 0 18px rgba(245,158,11,0.35)',
             }}>
               <HardHat className="w-4 h-4 text-white" />
             </div>
@@ -42,9 +41,9 @@ export default function LandingPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-sm font-semibold transition-all"
-            style={{ color: '#60a5fa' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#93c5fd')}
-            onMouseLeave={e => (e.currentTarget.style.color = '#60a5fa')}
+            style={{ color: '#f59e0b' }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#fbbf24')}
+            onMouseLeave={e => (e.currentTarget.style.color = '#f59e0b')}
           >
             Hugo Melo <ExternalLink className="w-3.5 h-3.5" />
           </a>
@@ -53,18 +52,17 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="pt-28 pb-32 px-6 text-center relative overflow-hidden">
-        {/* glow orb */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(circle 600px at 50% 40%, rgba(37,99,235,0.12), transparent)',
+          background: 'radial-gradient(circle 700px at 50% 30%, rgba(245,158,11,0.08), transparent)',
         }} />
 
         <div className="max-w-2xl mx-auto relative">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold mb-10" style={{
-            background: 'rgba(37,99,235,0.1)',
-            border: '1px solid rgba(37,99,235,0.3)',
-            color: '#93c5fd',
+            background: 'rgba(245,158,11,0.1)',
+            border: '1px solid rgba(245,158,11,0.25)',
+            color: '#fbbf24',
           }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: '#f59e0b' }} />
             Terrain · Luxembourg · 4 ans d'expérience
           </div>
 
@@ -72,7 +70,7 @@ export default function LandingPage() {
             Sur les chantiers,
             <br />
             <span style={{
-              background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+              background: 'linear-gradient(135deg, #fbbf24 0%, #f97316 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -81,7 +79,7 @@ export default function LandingPage() {
             </span>
           </h1>
 
-          <p className="text-lg leading-relaxed mb-12" style={{ color: '#64748b', maxWidth: '480px', margin: '0 auto 3rem' }}>
+          <p className="text-lg leading-relaxed mb-12" style={{ color: '#52525b', maxWidth: '480px', margin: '0 auto 3rem' }}>
             J'ai observé ce problème tous les jours sur le terrain.
             Ce prototype illustre ma façon de le structurer et d'y répondre.
           </p>
@@ -91,8 +89,8 @@ export default function LandingPage() {
               href={DEMO_URL}
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-sm font-bold text-white transition-all hover:scale-105"
               style={{
-                background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
-                boxShadow: '0 0 30px rgba(37,99,235,0.35)',
+                background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
+                boxShadow: '0 0 30px rgba(245,158,11,0.3)',
               }}
             >
               Voir le prototype
@@ -101,11 +99,7 @@ export default function LandingPage() {
             <a
               href="#methode"
               className="inline-flex items-center justify-center px-7 py-4 rounded-xl text-sm font-semibold transition-all"
-              style={{
-                color: '#94a3b8',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.1)',
-              }}
+              style={{ color: '#a1a1aa', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
             >
@@ -119,9 +113,9 @@ export default function LandingPage() {
       <section className="py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-px flex-1" style={{ background: 'linear-gradient(to right, transparent, rgba(239,68,68,0.4))' }} />
+            <div className="h-px flex-1" style={{ background: 'linear-gradient(to right, transparent, rgba(239,68,68,0.35))' }} />
             <p className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f87171' }}>Le problème</p>
-            <div className="h-px flex-1" style={{ background: 'linear-gradient(to left, transparent, rgba(239,68,68,0.4))' }} />
+            <div className="h-px flex-1" style={{ background: 'linear-gradient(to left, transparent, rgba(239,68,68,0.35))' }} />
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-14">
             Ce que j'observe sur le terrain, chaque jour
@@ -148,22 +142,22 @@ export default function LandingPage() {
               <div
                 key={title}
                 className="flex gap-5 rounded-2xl p-5 transition-all"
-                style={{ background: 'rgba(220,38,38,0.04)', border: '1px solid rgba(220,38,38,0.12)' }}
+                style={{ background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.1)' }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(220,38,38,0.08)';
-                  e.currentTarget.style.border = '1px solid rgba(220,38,38,0.22)';
+                  e.currentTarget.style.background = 'rgba(239,68,68,0.08)';
+                  e.currentTarget.style.border = '1px solid rgba(239,68,68,0.2)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(220,38,38,0.04)';
-                  e.currentTarget.style.border = '1px solid rgba(220,38,38,0.12)';
+                  e.currentTarget.style.background = 'rgba(239,68,68,0.04)';
+                  e.currentTarget.style.border = '1px solid rgba(239,68,68,0.1)';
                 }}
               >
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(220,38,38,0.12)' }}>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(239,68,68,0.1)' }}>
                   <Icon className="w-5 h-5" style={{ color: '#f87171' }} />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-100 mb-1.5 text-sm">{title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>{desc}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: '#52525b' }}>{desc}</p>
                 </div>
               </div>
             ))}
@@ -175,14 +169,14 @@ export default function LandingPage() {
       <section className="py-24 px-6" id="methode" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-px flex-1" style={{ background: 'linear-gradient(to right, transparent, rgba(37,99,235,0.4))' }} />
-            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: '#60a5fa' }}>Ma démarche</p>
-            <div className="h-px flex-1" style={{ background: 'linear-gradient(to left, transparent, rgba(37,99,235,0.4))' }} />
+            <div className="h-px flex-1" style={{ background: 'linear-gradient(to right, transparent, rgba(245,158,11,0.4))' }} />
+            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f59e0b' }}>Ma démarche</p>
+            <div className="h-px flex-1" style={{ background: 'linear-gradient(to left, transparent, rgba(245,158,11,0.4))' }} />
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-3">
             Comment j'aborde un problème opérationnel
           </h2>
-          <p className="text-center text-sm mb-14" style={{ color: '#334155' }}>
+          <p className="text-center text-sm mb-14" style={{ color: '#3f3f46' }}>
             Je ne pars pas d'une solution digitale. Je pars de ce que je vois sur le terrain.
           </p>
 
@@ -198,32 +192,32 @@ export default function LandingPage() {
               <div
                 key={i}
                 className="flex items-center gap-4 rounded-xl p-4 transition-all"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(37,99,235,0.07)';
-                  e.currentTarget.style.border = '1px solid rgba(37,99,235,0.2)';
+                  e.currentTarget.style.background = 'rgba(245,158,11,0.06)';
+                  e.currentTarget.style.border = '1px solid rgba(245,158,11,0.2)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)';
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.05)';
                 }}
               >
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-bold" style={{
-                  background: 'linear-gradient(135deg, rgba(37,99,235,0.25), rgba(37,99,235,0.1))',
-                  color: '#60a5fa',
-                  border: '1px solid rgba(37,99,235,0.25)',
+                  background: 'rgba(245,158,11,0.12)',
+                  color: '#f59e0b',
+                  border: '1px solid rgba(245,158,11,0.2)',
                 }}>{i + 1}</div>
-                <p className="text-sm font-medium" style={{ color: '#cbd5e1' }}>{text}</p>
+                <p className="text-sm font-medium" style={{ color: '#d4d4d8' }}>{text}</p>
               </div>
             ))}
           </div>
 
           <div className="mt-8 rounded-2xl p-6" style={{
-            background: 'linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.05))',
-            border: '1px solid rgba(37,99,235,0.2)',
+            background: 'linear-gradient(135deg, rgba(245,158,11,0.06), rgba(234,88,12,0.04))',
+            border: '1px solid rgba(245,158,11,0.15)',
           }}>
-            <p className="text-sm leading-relaxed" style={{ color: '#94a3b8' }}>
-              <strong className="text-white">ChantierOps est l'illustration concrète de cette démarche.</strong>{' '}
+            <p className="text-sm leading-relaxed" style={{ color: '#71717a' }}>
+              <strong className="text-slate-200">ChantierOps est l'illustration concrète de cette démarche.</strong>{' '}
               J'ai pris un problème réel du terrain, je l'ai structuré, et j'ai construit un prototype fonctionnel
               — en utilisant WhatsApp, que les équipes utilisent déjà, sans rien leur demander de plus.
             </p>
@@ -234,13 +228,13 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="py-28 px-6 relative overflow-hidden" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(circle 500px at 50% 50%, rgba(37,99,235,0.08), transparent)',
+          background: 'radial-gradient(circle 500px at 50% 50%, rgba(245,158,11,0.06), transparent)',
         }} />
         <div className="max-w-2xl mx-auto text-center relative">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">
             Vous observez les mêmes problèmes ?
           </h2>
-          <p className="text-base mb-10 leading-relaxed" style={{ color: '#475569' }}>
+          <p className="text-base mb-10 leading-relaxed" style={{ color: '#52525b' }}>
             Pas pour vendre un produit — pour échanger sur la façon dont vous gérez ces défis aujourd'hui.
           </p>
 
@@ -251,8 +245,8 @@ export default function LandingPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-sm font-bold text-white transition-all hover:scale-105"
               style={{
-                background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
-                boxShadow: '0 0 30px rgba(37,99,235,0.3)',
+                background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
+                boxShadow: '0 0 28px rgba(245,158,11,0.25)',
               }}
             >
               Me contacter sur LinkedIn
@@ -261,7 +255,7 @@ export default function LandingPage() {
             <a
               href="mailto:hugo1297@gmail.com"
               className="inline-flex items-center justify-center px-7 py-4 rounded-xl text-sm font-semibold transition-all"
-              style={{ color: '#94a3b8', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+              style={{ color: '#a1a1aa', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
             >
@@ -270,9 +264,9 @@ export default function LandingPage() {
             <Link
               href={DEMO_URL}
               className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-sm font-semibold transition-all"
-              style={{ color: '#60a5fa', background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.2)' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(37,99,235,0.15)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(37,99,235,0.08)')}
+              style={{ color: '#f59e0b', background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.18)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.13)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(245,158,11,0.07)')}
             >
               Explorer le prototype <ArrowRight className="w-4 h-4" />
             </Link>
@@ -281,12 +275,14 @@ export default function LandingPage() {
           {/* Footer */}
           <div className="pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="flex items-center justify-center gap-2 mb-2">
-              <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: '#2563eb' }}>
+              <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{
+                background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
+              }}>
                 <HardHat className="w-3.5 h-3.5 text-white" />
               </div>
-              <span className="font-bold text-slate-400 text-sm">Hugo Melo</span>
+              <span className="font-bold text-sm" style={{ color: '#52525b' }}>Hugo Melo</span>
             </div>
-            <p className="text-xs" style={{ color: '#1e293b' }}>
+            <p className="text-xs" style={{ color: '#27272a' }}>
               Construction Operations · Luxembourg · Démonstration de méthode, pas un produit fini.
             </p>
           </div>
