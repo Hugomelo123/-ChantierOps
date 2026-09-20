@@ -35,6 +35,11 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen text-slate-100" style={{ background: '#0f1c2e', fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif" }}>
 
+      {/* Top notice banner */}
+      <div className="w-full text-center py-2 px-4 text-xs font-semibold" style={{ background: 'rgba(217,119,6,0.12)', borderBottom: '1px solid rgba(217,119,6,0.25)', color: '#fbbf24' }}>
+        Ceci est une démonstration de méthode — pas un produit commercial.
+      </div>
+
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md" style={{ background: 'rgba(15,28,46,0.92)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -221,6 +226,45 @@ export default function LandingPage() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Comment j'aborde un problème opérationnel */}
+      <section className="py-16 px-4 sm:px-6">
+        <div className="max-w-3xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#475569' }}>
+            Ma démarche
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-slate-100 mb-3">
+            Comment j'aborde un problème opérationnel
+          </h2>
+          <p className="text-center text-sm mb-10 max-w-xl mx-auto" style={{ color: '#64748b' }}>
+            Je ne pars pas d'une solution digitale. Je pars de ce que je vois sur le terrain.
+          </p>
+
+          <div className="space-y-3 mb-10">
+            {[
+              { n: '1', text: "Observer ce qui se passe réellement sur le terrain" },
+              { n: '2', text: "Identifier où l'information se perd ou où le temps est gaspillé" },
+              { n: '3', text: "Comprendre le processus actuel — même s'il est informel ou basé sur WhatsApp" },
+              { n: '4', text: "Structurer le problème de façon claire" },
+              { n: '5', text: "Proposer une amélioration — digitale ou non" },
+              { n: '6', text: "Mesurer si cela apporte un gain réel" },
+            ].map(({ n, text }) => (
+              <div key={n} className="flex items-center gap-4 rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-bold text-sm" style={{ background: 'rgba(37,99,235,0.15)', color: '#60a5fa' }}>{n}</div>
+                <p className="text-sm text-slate-300">{text}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <p className="text-sm leading-relaxed text-center italic" style={{ color: '#64748b' }}>
+              ChantierOps n'est qu'un exercice pour pratiquer et illustrer cette façon de penser.
+              Ce n'est pas un logiciel à vendre. C'est une démonstration de méthode construite
+              à partir de situations réelles rencontrées sur le terrain au Luxembourg.
+            </p>
           </div>
         </div>
       </section>
@@ -424,10 +468,12 @@ export default function LandingPage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-4">
             Ce prototype vous parle ?
           </h2>
-          <p className="mb-10 leading-relaxed" style={{ color: '#94a3b8' }}>
-            Je suis <strong className="text-slate-200">Hugo Melo</strong> — je travaille sur chantier au Luxembourg depuis 4 ans.
-            Ce prototype est né d'un problème que j'observe tous les jours : l'information qui se perd
-            entre les équipes et la direction. Si ce problème existe dans votre entreprise, je serais ravi d'en discuter.
+          <p className="mb-4 leading-relaxed" style={{ color: '#94a3b8' }}>
+            Je suis <strong className="text-slate-200">Hugo Melo</strong> — construit à partir de mon expérience sur le terrain au Luxembourg.
+          </p>
+          <p className="mb-10 leading-relaxed" style={{ color: '#64748b' }}>
+            Si vous observez les mêmes problèmes dans votre entreprise, je serais intéressé à échanger
+            sur la façon dont vous les gérez actuellement.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
