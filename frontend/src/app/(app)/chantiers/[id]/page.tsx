@@ -5,7 +5,7 @@ import { chantiersApi, rapportsApi, whatsappApi } from '@/lib/api';
 import Badge from '@/components/ui/Badge';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, MapPin, AlertTriangle, FileText, MessageSquare, CheckCircle, Send, Users } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const EQUIPE_LABELS: Record<string, string> = {
   CARRELAGE: 'Carrelage',
@@ -56,6 +56,16 @@ export default function ChantierDetail() {
     onSuccess: () => setInstruction(''),
   });
 
+  const equipes = chantier?.equipes || [];
+  const uniqueTypes = Array.from(new Set(equipes.map(e => e.configEquipe.type)));
+
+  useEffect(() => {
+    if (!instructionEquipe && uniqueTypes.length > 0) {
+      setInstructionEquipe(uniqueTypes[0]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uniqueTypes.join(',')]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -64,10 +74,6 @@ export default function ChantierDetail() {
     );
   }
   if (!chantier) return null;
-
-  const equipes = chantier.equipes || [];
-  const uniqueTypes = Array.from(new Set(equipes.map(e => e.configEquipe.type)));
-  if (!instructionEquipe && uniqueTypes.length > 0) setInstructionEquipe(uniqueTypes[0]);
 
   const statusStyles: Record<string, { bg: string; color: string }> = {
     OK:      { bg: '#16a34a', color: '#fff' },
