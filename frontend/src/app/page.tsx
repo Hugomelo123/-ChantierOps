@@ -74,7 +74,7 @@ export default function LandingPage() {
             </span>
           </h1>
 
-          <p className="text-lg leading-relaxed mb-12" style={{ color: '#52525b', maxWidth: '480px', margin: '0 auto 3rem' }}>
+          <p className="text-lg leading-relaxed mb-12" style={{ color: '#94a3b8', maxWidth: '480px', margin: '0 auto 3rem' }}>
             Je travaille sur les chantiers au Luxembourg depuis 4 ans.
             Ce prototype illustre comment je structure un problème que je vis de l'intérieur, chaque jour.
           </p>
@@ -94,9 +94,9 @@ export default function LandingPage() {
             <a
               href="#methode"
               className="inline-flex items-center justify-center px-7 py-4 rounded-xl text-sm font-semibold transition-all"
-              style={{ color: '#a1a1aa', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
+              style={{ color: '#cbd5e1', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
             >
               La démarche
             </a>
@@ -152,7 +152,7 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-100 mb-1.5 text-sm">{title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#52525b' }}>{desc}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: '#94a3b8' }}>{desc}</p>
                 </div>
               </div>
             ))}
@@ -171,8 +171,8 @@ export default function LandingPage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-3">
             Comment j'aborde un problème opérationnel
           </h2>
-          <p className="text-center text-sm mb-14 max-w-xl mx-auto" style={{ color: '#52525b' }}>
-            Quand j'arrive sur un chantier, je me pose toujours la même question : <em style={{ color: '#a1a1aa' }}>où est-ce que l'information se perd ?</em> C'est de là que part tout le reste.
+          <p className="text-center text-sm mb-14 max-w-xl mx-auto" style={{ color: '#94a3b8' }}>
+            Quand j'arrive sur un chantier, je me pose toujours la même question : <em style={{ color: '#e2e8f0' }}>où est-ce que l'information se perd ?</em> C'est de là que part tout le reste.
           </p>
 
           <div className="space-y-2.5">
@@ -211,8 +211,8 @@ export default function LandingPage() {
             background: 'linear-gradient(135deg, rgba(245,158,11,0.06), rgba(234,88,12,0.04))',
             border: '1px solid rgba(245,158,11,0.15)',
           }}>
-            <p className="text-sm leading-relaxed" style={{ color: '#71717a' }}>
-              <strong className="text-slate-200">ChantierOps est l'illustration concrète de cette démarche.</strong>{' '}
+            <p className="text-sm leading-relaxed" style={{ color: '#94a3b8' }}>
+              <strong className="text-white">ChantierOps est l'illustration concrète de cette démarche.</strong>{' '}
               J'ai pris un problème réel du terrain, je l'ai structuré, et j'ai construit un prototype fonctionnel
               — en utilisant WhatsApp, que les équipes utilisent déjà, sans rien leur demander de plus.
             </p>
@@ -229,7 +229,7 @@ export default function LandingPage() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">
             Vous observez les mêmes problèmes ?
           </h2>
-          <p className="text-base mb-10 leading-relaxed" style={{ color: '#52525b' }}>
+          <p className="text-base mb-10 leading-relaxed" style={{ color: '#94a3b8' }}>
             Pas pour vendre un produit — pour échanger sur la façon dont vous gérez ces défis aujourd'hui.
           </p>
 
@@ -250,9 +250,9 @@ export default function LandingPage() {
             <a
               href="mailto:hugo1297@gmail.com"
               className="inline-flex items-center justify-center px-7 py-4 rounded-xl text-sm font-semibold transition-all"
-              style={{ color: '#a1a1aa', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
+              style={{ color: '#cbd5e1', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
             >
               hugo1297@gmail.com
             </a>
@@ -275,9 +275,9 @@ export default function LandingPage() {
               }}>
                 <HardHat className="w-3.5 h-3.5 text-white" />
               </div>
-              <span className="font-bold text-sm" style={{ color: '#52525b' }}>Hugo Melo</span>
+              <span className="font-bold text-sm" style={{ color: '#94a3b8' }}>Hugo Melo</span>
             </div>
-            <p className="text-xs" style={{ color: '#27272a' }}>
+            <p className="text-xs" style={{ color: '#64748b' }}>
               Construction Operations · Luxembourg · Démonstration de méthode, pas un produit fini.
             </p>
           </div>
