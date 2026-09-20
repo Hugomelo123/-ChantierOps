@@ -28,13 +28,8 @@ export default function LandingPage() {
       }}>
         <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{
-              background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
-              boxShadow: '0 0 18px rgba(245,158,11,0.35)',
-            }}>
-              <HardHat className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold text-white tracking-tight">ChantierOps</span>
+            <span className="font-bold text-white tracking-tight">Hugo Melo</span>
+            <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(245,158,11,0.12)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.2)' }}>ChantierOps</span>
           </div>
           <a
             href="https://www.linkedin.com/in/hugomelo1297/"
@@ -63,7 +58,7 @@ export default function LandingPage() {
             color: '#fbbf24',
           }}>
             <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: '#f59e0b' }} />
-            Terrain · Luxembourg · 4 ans d'expérience
+            Aide-carreleur · Luxembourg · 4 ans sur le terrain
           </div>
 
           <h1 className="text-5xl sm:text-6xl font-extrabold leading-[1.1] mb-6 tracking-tight">
@@ -80,8 +75,8 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-lg leading-relaxed mb-12" style={{ color: '#52525b', maxWidth: '480px', margin: '0 auto 3rem' }}>
-            J'ai observé ce problème tous les jours sur le terrain.
-            Ce prototype illustre ma façon de le structurer et d'y répondre.
+            Je travaille sur les chantiers au Luxembourg depuis 4 ans.
+            Ce prototype illustre comment je structure un problème que je vis de l'intérieur, chaque jour.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -176,8 +171,8 @@ export default function LandingPage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-3">
             Comment j'aborde un problème opérationnel
           </h2>
-          <p className="text-center text-sm mb-14" style={{ color: '#3f3f46' }}>
-            Je ne pars pas d'une solution digitale. Je pars de ce que je vois sur le terrain.
+          <p className="text-center text-sm mb-14 max-w-xl mx-auto" style={{ color: '#52525b' }}>
+            Quand j'arrive sur un chantier, je me pose toujours la même question : <em style={{ color: '#a1a1aa' }}>où est-ce que l'information se perd ?</em> C'est de là que part tout le reste.
           </p>
 
           <div className="space-y-2.5">
